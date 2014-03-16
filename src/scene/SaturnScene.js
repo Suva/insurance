@@ -2,7 +2,7 @@ define(function(require){
     var StarSystem = require("component/starfield");
 
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 5000);
     camera.lookAt(new THREE.Vector3());
 
     var starSystem = StarSystem.create(27)
@@ -76,7 +76,7 @@ define(function(require){
 
                 if(stage == 1){
                     camera.position.set(
-                        spaceship.position.x - 10 + (xPos+=0.03),
+                        spaceship.position.x - 10 + (xPos+=0.01),
                         spaceship.position.y + 3,
                         spaceship.position.z + 6
                     );
@@ -89,7 +89,7 @@ define(function(require){
             starSystem.position = camera.position;
 
         }
-    }
+    };
 
     function createLight() {
         var light = new THREE.DirectionalLight(0xFFFFFF, 2, 1000);
@@ -101,7 +101,7 @@ define(function(require){
 
         light.position.set(-80, 20, 0);
 
-        return light
+        return light;
     }
 
     function createLensFlare() {

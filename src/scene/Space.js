@@ -1,5 +1,6 @@
 define(function(require){
     var StarSystem = require("component/starfield");
+    var InsuranceLogo = require("component/InsuranceLogo");
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 1000);
@@ -9,7 +10,12 @@ define(function(require){
 
     var starSystem = StarSystem.create();
 
+    var container = new THREE.Object3D();
+    container.add(InsuranceLogo.system);
+    container.add(camera);
+
     scene.add(starSystem);
+    scene.add(container);
 
     var startTime = null;
     return {
@@ -21,9 +27,14 @@ define(function(require){
 
             var curTime = time - startTime;
 
-            camera.rotation.y = curTime / 100;
+            container.position.z = (curTime) * 60;
 
 
+            camera.rotation.z = -time*0.1;
+
+            if(time > 2){
+                InsuranceLogo.render(curTime);
+            }
         }
     }
 

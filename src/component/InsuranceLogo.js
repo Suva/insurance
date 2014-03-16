@@ -189,7 +189,9 @@ define(function(){
     console.log(geometry.colors);
 
     var particleSystemMaterial = new THREE.ParticleSystemMaterial({
-        size: 0.25,
+        map: THREE.ImageUtils.loadTexture("images/star.png"),
+        size: 0.4,
+        transparent: true,
         blending: THREE.AdditiveBlending,
         vertexColors: true
     });
@@ -203,7 +205,6 @@ define(function(){
                 if(idx > decayLimit) return;
 
                 geometry.vertices[idx].z -= 0.8;
-
 
                 geometry.colors[idx].r -= 0.01;
                 geometry.colors[idx].g -= 0.01;

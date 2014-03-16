@@ -25,7 +25,7 @@ define(function(require){
                     getRandomStarPosition(r),
                     getRandomStarPosition(r)
                 );
-            } while(origin.distanceTo(vector) < 300)
+            } while(origin.distanceTo(vector) < 600)
 
             geo.vertices.push(vector);
             var color = new THREE.Color(0xffffff);

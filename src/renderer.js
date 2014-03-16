@@ -1,7 +1,7 @@
 define(function(require){
     var TimeLine = require("timeline");
 
-    var renderer = new THREE.WebGLRenderer( {antialias: true} );
+    var renderer = new THREE.WebGLRenderer( {antialias: true, alpha:true} );
     renderer.shadowMapEnabled = true;
 
     var scene;

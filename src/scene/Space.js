@@ -11,10 +11,18 @@ define(function(require){
 
     scene.add(starSystem);
 
+    var startTime = null;
     return {
         scene: scene,
         camera: camera,
         render: function(time){
+            if(!startTime)
+                startTime = 0;
+
+            var curTime = time - startTime;
+
+            camera.rotation.y = curTime / 100;
+
 
         }
     }

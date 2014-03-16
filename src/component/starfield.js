@@ -1,11 +1,14 @@
-define(function(){
+define(function(require){
+    var RandomNumberGenerator = require("random");
+
+    var r = RandomNumberGenerator(33);
 
     return {
         create: createStarSystem
     };
 
     function getRandomStarPosition() {
-        return (THREE.Math.randInt(0, 1) ? 1 : -1) * Math.random() * 900 + 100;
+        return (r.randInt(0, 1) ? 1 : -1) * r.random() * 900 + 100;
     }
 
     function createStarSystem() {
@@ -25,7 +28,7 @@ define(function(){
         var sprite = THREE.ImageUtils.loadTexture("images/star.png");
         var particleSystemMaterial = new THREE.ParticleSystemMaterial({
             map: sprite,
-            size: 15,
+            size: 10,
             blending: THREE.AdditiveBlending,
             transparent: true,
             vertexColors: true

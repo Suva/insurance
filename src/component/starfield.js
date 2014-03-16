@@ -1,27 +1,35 @@
 define(function(require){
     var RandomNumberGenerator = require("random");
 
-    var r = RandomNumberGenerator(33);
-
     return {
         create: createStarSystem
     };
 
-    function getRandomStarPosition() {
-        return (r.randInt(0, 1) ? 1 : -1) * r.random() * 900 + 100;
+
+    function getRandomStarPosition(r) {
+        return (r.randInt(0, 1) ? 1 : -1) * (r.random() * 1000);
     }
 
-    function createStarSystem() {
+    function createStarSystem(seed) {
+        var origin = new THREE.Vector3();
+
+        var r = RandomNumberGenerator(seed);
+
         var geo = new THREE.Geometry();
         var colors = [];
         _.each(_.range(1, 5000), function () {
-            geo.vertices.push(new THREE.Vector3(
-                getRandomStarPosition(),
-                getRandomStarPosition(),
-                getRandomStarPosition()
-            ));
+            var vector;
+            do {
+                vector = new THREE.Vector3(
+                    getRandomStarPosition(r),
+                    getRandomStarPosition(r),
+                    getRandomStarPosition(r)
+                );
+            } while(origin.distanceTo(vector) < 300)
+
+            geo.vertices.push(vector);
             var color = new THREE.Color(0xffffff);
-            color.setHSL(Math.random(), 0.5, 0.9);
+            color.setHSL(r.random(), 0.5, 0.9);
             colors.push(color);
         });
         geo.colors = colors;

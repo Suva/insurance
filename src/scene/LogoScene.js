@@ -9,12 +9,12 @@ define(function(require){
     camera.lookAt(new THREE.Vector3());
 
     var starSystem = StarSystem.create();
+    scene.add(starSystem);
 
     var container = new THREE.Object3D();
     container.add(InsuranceLogo.system);
-    container.add(camera);
 
-    scene.add(starSystem);
+    container.add(camera);
     scene.add(container);
 
     var startTime = null;

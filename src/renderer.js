@@ -1,5 +1,8 @@
-define(function(){
-    var renderer = new THREE.WebGLRenderer( { antialias: false, clearAlpha: 1 } );
+define(function(require){
+    var TimeLine = require("timeline");
+
+    var renderer = new THREE.WebGLRenderer( {antialias: true} );
+    renderer.shadowMapEnabled = true;
 
     var scene;
     var timeSource;
@@ -14,11 +17,9 @@ define(function(){
         setTimeSource: function(argTimeSource){
             timeSource = argTimeSource;
         },
-        setScene: function setScene(argScene){
-            scene = argScene;
-        },
         start: function() {
             function render() {
+                scene = TimeLine.getScene();
                 if(!scene){
                     requestAnimationFrame(render);
                     return;

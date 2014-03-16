@@ -1,8 +1,7 @@
-require(["renderer", "scene/LogoScene"], function(Renderer, LogoScene){
+require(["renderer"], function(Renderer){
 
     Renderer.init();
     Renderer.setTimeSource(createDummyTimeSource());
-    Renderer.setScene(LogoScene);
     Renderer.start();
 
     function createDummyTimeSource() {

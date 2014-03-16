@@ -7,7 +7,7 @@ define(function(require){
 
 
     function getRandomStarPosition(r) {
-        return (r.randInt(0, 1) ? 1 : -1) * (r.random() * 1000);
+        return (r.randInt(0, 1) ? 1 : -1) * (r.random() * 3000);
     }
 
     function createStarSystem(seed) {
@@ -25,7 +25,7 @@ define(function(require){
                     getRandomStarPosition(r),
                     getRandomStarPosition(r)
                 );
-            } while(origin.distanceTo(vector) < 600)
+            } while(origin.distanceTo(vector) < 1000)
 
             geo.vertices.push(vector);
             var color = new THREE.Color(0xffffff);
@@ -36,7 +36,7 @@ define(function(require){
         var sprite = THREE.ImageUtils.loadTexture("images/star.png");
         var particleSystemMaterial = new THREE.ParticleSystemMaterial({
             map: sprite,
-            size: 10,
+            size: 20,
             blending: THREE.AdditiveBlending,
             transparent: true,
             vertexColors: true

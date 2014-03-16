@@ -57,9 +57,9 @@ define(function(require){
 
     var stage = 0;
 
-    var xPos = 0;
 
     var spaceshipTimeStart = null;
+    var stage2StartTime = null;
     return {
         scene: scene,
         camera: camera,
@@ -70,13 +70,14 @@ define(function(require){
                 }
                 spaceship.position.x = -100 + (time - spaceshipTimeStart) * 50;
 
-                if(spaceship.position.x > 100){
+                if(!stage2StartTime && spaceship.position.x > 100){
                     stage = 1;
+                    stage2StartTime = time;
                 }
 
                 if(stage == 1){
                     camera.position.set(
-                        spaceship.position.x - 10 + (xPos+=0.01),
+                        spaceship.position.x - 10 + (time - stage2StartTime),
                         spaceship.position.y + 3,
                         spaceship.position.z + 6
                     );

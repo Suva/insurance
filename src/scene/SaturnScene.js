@@ -31,33 +31,7 @@ define(function(require){
 
     scene.add( createLensFlare() );
 
-    function lensFlareUpdateCallback( object ) {
-
-        var f, fl = object.lensFlares.length;
-        var flare;
-        var vecX = -object.positionScreen.x * 2;
-        var vecY = -object.positionScreen.y * 2;
-
-
-        for( f = 0; f < fl; f++ ) {
-
-            flare = object.lensFlares[ f ];
-
-            flare.x = object.positionScreen.x + vecX * flare.distance;
-            flare.y = object.positionScreen.y + vecY * flare.distance;
-
-            flare.rotation = 0;
-
-        }
-
-        object.lensFlares[ 2 ].y += 0.025;
-        object.lensFlares[ 3 ].rotation = object.positionScreen.x * 0.5 + THREE.Math.degToRad( 45 );
-
-    }
-
     var stage = 0;
-
-
     var spaceshipTimeStart = null;
     var stage2StartTime = null;
     return {
@@ -92,6 +66,31 @@ define(function(require){
         }
     };
 
+    function lensFlareUpdateCallback( object ) {
+
+        var f, fl = object.lensFlares.length;
+        var flare;
+        var vecX = -object.positionScreen.x * 2;
+        var vecY = -object.positionScreen.y * 2;
+
+
+        for( f = 0; f < fl; f++ ) {
+
+            flare = object.lensFlares[ f ];
+
+            flare.x = object.positionScreen.x + vecX * flare.distance;
+            flare.y = object.positionScreen.y + vecY * flare.distance;
+
+            flare.rotation = 0;
+
+        }
+
+        object.lensFlares[ 2 ].y += 0.025;
+        object.lensFlares[ 3 ].rotation = object.positionScreen.x * 0.5 + THREE.Math.degToRad( 45 );
+
+    }
+
+
     function createLight() {
         var light = new THREE.DirectionalLight(0xFFFFFF, 2, 1000);
         light.castShadow = true;
@@ -107,13 +106,9 @@ define(function(require){
 
     function createLensFlare() {
         var textureFlare0 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare0.png");
-        var textureFlare2 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare2.png");
         var textureFlare3 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare3.png");
         var flareColor = new THREE.Color(0xffffff);
         var lensFlare = new THREE.LensFlare(textureFlare0, 700, 0.0, THREE.AdditiveBlending, flareColor);
-        lensFlare.add(textureFlare2, 512, 0.0, THREE.AdditiveBlending);
-        lensFlare.add(textureFlare2, 512, 0.0, THREE.AdditiveBlending);
-        lensFlare.add(textureFlare2, 512, 0.0, THREE.AdditiveBlending);
         lensFlare.add(textureFlare3, 60, 0.6, THREE.AdditiveBlending);
         lensFlare.add(textureFlare3, 70, 0.7, THREE.AdditiveBlending);
         lensFlare.add(textureFlare3, 120, 0.9, THREE.AdditiveBlending);

@@ -1,8 +1,11 @@
-require(["renderer"], function(Renderer){
+require(["Manager", "renderer"], function(Manager, Renderer){
 
     Renderer.init();
-    Renderer.setTimeSource(createDummyTimeSource());
-    Renderer.start();
+
+    Manager.waitForLoadToComplete(function(){
+        Renderer.setTimeSource(createDummyTimeSource());
+        Renderer.start();
+    });
 
     function createDummyTimeSource() {
         var startTime = getCurrentTime();

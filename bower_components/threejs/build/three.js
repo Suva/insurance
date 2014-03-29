@@ -10995,9 +10995,13 @@ THREE.Loader.prototype = {
 
 		function load_image( where, url ) {
 
+            loadStatus++;
+
 			var image = new Image();
 
 			image.onload = function () {
+
+                loadStatus--;
 
 				if ( !is_pow2( this.width ) || !is_pow2( this.height ) ) {
 

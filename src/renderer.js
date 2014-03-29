@@ -12,14 +12,14 @@ define(function(require){
             renderer.autoClear = false;
             $(window).resize(resizeViewPort);
             document.body.appendChild( renderer.domElement );
-            $(renderer.domElement).hide();
+            $("canvas").hide();
             resizeViewPort();
         },
         setTimeSource: function(argTimeSource){
             timeSource = argTimeSource;
         },
         start: function() {
-            $(renderer.domElement).fadeIn(1000);
+            $("canvas").fadeIn(3000);
             function render() {
                 scene = TimeLine.getScene();
                 if(!scene){

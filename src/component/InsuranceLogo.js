@@ -1,4 +1,6 @@
-define(function(){
+define(function(require){
+    var Timer = require("Timer");
+
     var width = 200;
     var height = 31;
     var image =
@@ -194,27 +196,30 @@ define(function(){
     });
 
     var decayLimit = 0;
-
+    var timer = new Timer();
     return {
         system: new THREE.ParticleSystem(geometry, particleSystemMaterial),
         render: function(time){
+            /* Time coefficient to keep things moving in same time even when framedropping */
+            var timeCoef = timer.getPassed(time) * 60;
+
             _.each(geometry.vertices, function(vertex, idx){
                 if(idx > decayLimit) return;
 
-                geometry.vertices[idx].z -= 0.1;
-                geometry.vertices[idx].x += ((idx % 31) / 50 - 0.5) * 0.01;
-                geometry.vertices[idx].y += ((idx % 31) / 50 - 0.5) * 0.01;
+                geometry.vertices[idx].z -= 0.1 * timeCoef;
+                geometry.vertices[idx].x += ((idx % 31) / 50 - 0.5) * 0.03 * timeCoef;
+                geometry.vertices[idx].y += ((idx % 31) / 50 - 0.5) * 0.03 * timeCoef;
 
-                geometry.colors[idx].r -= 0.005;
-                geometry.colors[idx].g -= 0.005;
-                geometry.colors[idx].b -= 0.005;
+                geometry.colors[idx].r -= 0.005 * timeCoef;
+                geometry.colors[idx].g -= 0.005 * timeCoef;
+                geometry.colors[idx].b -= 0.005 * timeCoef;
 
             });
 
             geometry.verticesNeedUpdate = true;
             geometry.colorsNeedUpdate = true;
 
-            decayLimit+=40;
+            decayLimit+= 20 * timeCoef;
         }
     };
 });

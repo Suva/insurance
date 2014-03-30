@@ -10,7 +10,6 @@ define(function(require) {
         },
         onEvent: function(event){
             if(typeof(event.pattern) == 'undefined') return;
-            console.log(event.pattern);
             switch(event.pattern){
                 case 0:
                     currentScene = SaturnScene;

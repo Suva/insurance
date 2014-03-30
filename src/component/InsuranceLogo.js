@@ -201,11 +201,13 @@ define(function(){
             _.each(geometry.vertices, function(vertex, idx){
                 if(idx > decayLimit) return;
 
-                geometry.vertices[idx].z -= 0.8;
+                geometry.vertices[idx].z -= 0.1;
+                geometry.vertices[idx].x += ((idx % 31) / 50 - 0.5) * 0.01;
+                geometry.vertices[idx].y += ((idx % 31) / 50 - 0.5) * 0.01;
 
-                geometry.colors[idx].r -= 0.01;
-                geometry.colors[idx].g -= 0.01;
-                geometry.colors[idx].b -= 0.01;
+                geometry.colors[idx].r -= 0.005;
+                geometry.colors[idx].g -= 0.005;
+                geometry.colors[idx].b -= 0.005;
 
             });
 

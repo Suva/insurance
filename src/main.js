@@ -1,12 +1,18 @@
 require(["Manager", "renderer", "MusicPlayer"], function(Manager, Renderer, MusicPlayer){
 
     var loader = initLoader();
+    var pattern = null;
+
+    var res = location.hash.match(/pattern=([0-9].*)/);
+    if(res){
+        pattern = res[1];
+    }
 
     Manager.waitForLoadToComplete(function(){
         loader.fadeOut(1000);
         Renderer.init();
         Renderer.setTimeSource(MusicPlayer);
-        MusicPlayer.start();
+        MusicPlayer.start(pattern);
         Renderer.start();
     });
 
@@ -31,4 +37,4 @@ require(["Manager", "renderer", "MusicPlayer"], function(Manager, Renderer, Musi
         });
         return loader;
     }
-});
+});;

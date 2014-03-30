@@ -3,12 +3,12 @@ define(function(require){
     var InsuranceLogo = require("component/InsuranceLogo");
 
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 5000);
 
     camera.position.z = 10;
     camera.lookAt(new THREE.Vector3());
 
-    var starSystem = StarSystem.create(33);
+    var starSystem = StarSystem.create(33, 100);
     scene.add(starSystem);
 
     var container = new THREE.Object3D();
@@ -30,14 +30,14 @@ define(function(require){
 
             container.position.z = (curTime) * 60;
 
-            camera.rotation.z = -curTime*0.1;
+            camera.rotation.z = -curTime*0.05;
 
             if(stage > 0){
                 InsuranceLogo.render(curTime);
             }
         },
         onEvent: function(event){
-            if(event.pattern == 5){
+            if(event.pattern == 6){
                 stage = 1;
             }
         }

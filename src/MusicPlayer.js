@@ -9,7 +9,11 @@ define(function(require){
     audio.load();
 
     return {
-        start: function(){
+        start: function(pattern){
+            if(pattern){
+                var time = findPatternPosition(pattern);
+                audio.currentTime = time;
+            }
             audio.play();
         },
         getTime: function() {
@@ -40,5 +44,16 @@ define(function(require){
             return events.length == 0 ? false : events;
         }
     };
+
+
+    function findPatternPosition(pattern) {
+        for(var i in songEvents){
+            var ev = songEvents[i][1][0];
+            if(ev[1] == -1 && ev[0] == pattern){
+                position = i;
+                return songEvents[i][0];
+            }
+        }
+    }
 
 });

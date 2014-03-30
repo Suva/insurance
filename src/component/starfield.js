@@ -10,7 +10,9 @@ define(function(require){
         return (r.randInt(0, 1) ? 1 : -1) * (r.random() * 3000);
     }
 
-    function createStarSystem(seed) {
+    function createStarSystem(seed, distance) {
+        if(!distance) distance = 1000;
+
         var origin = new THREE.Vector3();
 
         var r = RandomNumberGenerator(seed);
@@ -25,7 +27,7 @@ define(function(require){
                     getRandomStarPosition(r),
                     getRandomStarPosition(r)
                 );
-            } while(origin.distanceTo(vector) < 1000)
+            } while(origin.distanceTo(vector) < distance)
 
             geo.vertices.push(vector);
             var color = new THREE.Color(0xffffff);

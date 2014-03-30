@@ -47,7 +47,7 @@ define(function(require){
 
                 if(stage == 1){
                     camera.position.set(
-                        spaceship.position.x - 10 + (time - stage2StartTime),
+                        spaceship.position.x - 10 + (time - stage2StartTime) * 4,
                         spaceship.position.y + 3,
                         spaceship.position.z + 6
                     );

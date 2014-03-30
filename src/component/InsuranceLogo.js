@@ -185,9 +185,6 @@ define(function(){
         return geometry;
     }, new THREE.Geometry());
 
-
-    console.log(geometry.colors);
-
     var particleSystemMaterial = new THREE.ParticleSystemMaterial({
         map: THREE.ImageUtils.loadTexture("images/star.png"),
         size: 0.4,

@@ -32,22 +32,18 @@ define(function(require){
     scene.add( createLensFlare() );
 
     var stage = 0;
-    var spaceshipTimeStart = null;
     var stage2StartTime = null;
+    var curTime = null;
+    var startTime = null;
     return {
         scene: scene,
         camera: camera,
         render: function(time){
-            if(spaceship){
-                if(!spaceshipTimeStart){
-                    spaceshipTimeStart = time;
-                }
-                spaceship.position.x = -100 + (time - spaceshipTimeStart) * 50;
+            if(!startTime) startTime = time;
+            curTime = time - startTime;
 
-                if(!stage2StartTime && spaceship.position.x > 100){
-                    stage = 1;
-                    stage2StartTime = time;
-                }
+            if(spaceship){
+                spaceship.position.x = -100 + (time - startTime) * 45;
 
                 if(stage == 1){
                     camera.position.set(
@@ -63,6 +59,12 @@ define(function(require){
             }
             starSystem.position = camera.position;
 
+        },
+        onEvent: function(event){
+            if(event.pattern == 2){
+                stage = 1;
+                stage2StartTime = curTime;
+            }
         }
     };
 

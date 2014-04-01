@@ -4,6 +4,10 @@ define(function(require){
     var renderer = new THREE.WebGLRenderer( {antialias: true, alpha:true} );
     renderer.shadowMapEnabled = true;
 
+    var renderModel = new THREE.RenderPass();
+
+    var composer = InitializeComposer();
+
     var scene;
     var timeSource;
 
@@ -35,7 +39,12 @@ define(function(require){
                 scene.render(timeSource.getTime());
 
                 requestAnimationFrame(render);
-                renderer.render(scene.scene, scene.camera);
+
+
+                renderModel.scene = scene.scene;
+                renderModel.camera = scene.camera;
+
+                composer.render();
             }
             render();
         },
@@ -55,5 +64,19 @@ define(function(require){
         var position = (window.innerHeight - height) / 2;
         renderer.setSize(width, height);
         $("canvas").css("margin-top", position + "px");
+    }
+
+    function InitializeComposer() {
+        var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
+        var effectBloom = new THREE.BloomPass(0.5);
+        var effectVignette = new THREE.ShaderPass(THREE.VignetteShader);
+        effectCopy.renderToScreen = true;
+
+        var composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderModel);
+        composer.addPass(effectBloom);
+        composer.addPass(effectVignette);
+        composer.addPass(effectCopy);
+        return composer;
     }
 });

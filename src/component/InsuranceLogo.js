@@ -207,8 +207,8 @@ define(function(require){
                 if(idx > decayLimit) return;
 
                 geometry.vertices[idx].z -= 0.1 * timeCoef;
-                geometry.vertices[idx].x += ((idx % 31) / 50 - 0.5) * 0.03 * timeCoef;
-                geometry.vertices[idx].y += ((idx % 31) / 50 - 0.5) * 0.03 * timeCoef;
+                geometry.vertices[idx].x += (((width - idx) % width) / width - 0.5) * 0.1 * timeCoef;
+                geometry.vertices[idx].y += (((width - idx) % width) / width - 0.5) * 0.03 * timeCoef;
 
                 geometry.colors[idx].r -= 0.005 * timeCoef;
                 geometry.colors[idx].g -= 0.005 * timeCoef;

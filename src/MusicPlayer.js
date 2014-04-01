@@ -4,7 +4,7 @@ define(function(require){
     var position = 0;
 
     loadStatus++;
-    audio = new Audio("music/dnb7.4.mp3");
+    audio = new Audio("music/dnb7.5.mp3");
     audio.oncanplay = function(){loadStatus--};
     audio.load();
 

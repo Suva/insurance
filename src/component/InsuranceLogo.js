@@ -189,7 +189,7 @@ define(function(require){
 
     var particleSystemMaterial = new THREE.ParticleSystemMaterial({
         map: THREE.ImageUtils.loadTexture("images/star.png"),
-        size: 0.4,
+        size: 1,
         transparent: true,
         blending: THREE.AdditiveBlending,
         vertexColors: true
@@ -210,9 +210,9 @@ define(function(require){
                 geometry.vertices[idx].x += (((width - idx) % width) / width - 0.5) * 0.1 * timeCoef;
                 geometry.vertices[idx].y += (((width - idx) % width) / width - 0.5) * 0.03 * timeCoef;
 
-                geometry.colors[idx].r -= 0.005 * timeCoef;
-                geometry.colors[idx].g -= 0.005 * timeCoef;
-                geometry.colors[idx].b -= 0.005 * timeCoef;
+                geometry.colors[idx].r -= 0.008 * timeCoef;
+                geometry.colors[idx].g -= 0.008 * timeCoef;
+                geometry.colors[idx].b -= 0.008 * timeCoef;
 
             });
 

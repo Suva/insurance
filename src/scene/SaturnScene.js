@@ -1,5 +1,6 @@
 define(function(require){
     var StarSystem = require("component/starfield");
+    var Logo = require("component/InsuranceLogo");
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 5000);
@@ -31,10 +32,16 @@ define(function(require){
 
     scene.add( createLensFlare() );
 
+    Logo.system.rotation.y = Math.PI / 2;
+    Logo.system.scale.set(2, 2, 2)
+    Logo.system.sortParticles = true;
+
+
     var stage = 0;
     var stage2StartTime = null;
     var curTime = null;
     var startTime = null;
+    var decaying = false;
     return {
         scene: scene,
         camera: camera,
@@ -44,6 +51,12 @@ define(function(require){
 
             if(spaceship){
                 spaceship.position.x = -100 + (time - startTime) * 45;
+                Logo.system.position.set(
+                    spaceship.position.x + 10,
+                    spaceship.position.y,
+                    spaceship.position.z
+                );
+
 
                 if(stage == 1){
                     camera.position.set(
@@ -59,12 +72,23 @@ define(function(require){
             }
             starSystem.position = camera.position;
 
+            if(decaying){
+                Logo.render(time);
+            }
+
         },
         onEvent: function(event){
             if(event.pattern == 2){
                 stage = 1;
                 stage2StartTime = curTime;
             }
+            if(event.pattern == 4) {
+                scene.add(Logo.system);
+            }
+            if(event.pattern == 6) {
+                decaying = true;
+            }
+
         }
     };
 

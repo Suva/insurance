@@ -16,4 +16,4 @@ require(["Loader", "renderer", "MusicPlayer", "Timeline"], function(Loader, Rend
         return pattern;
     }
 
-});;
+});

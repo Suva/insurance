@@ -8,6 +8,7 @@ define(function(require){
     var rotSpeed = 0;
     var respawnLines = true;
     var brightness = 1;
+    var aberration = 0;
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 5000);
@@ -88,19 +89,28 @@ define(function(require){
             starSystem.rotation.x += timePassed * 0.01;
             starSystem.rotation.z -= timePassed * 0.1;
 
+            if(aberration > 0){
+                aberration = Math.max(0, aberration - timePassed * 0.03);
+                effectPass.uniforms.aberration.value = aberration;
+            }
+
         },
         onEvent: function(event) {
             if(event.instrument){
                 if(event.instrument == 1 && event.note == 'C-3'){
                     scaling = 1;
                 }
-                if(event.instrument == 1 && event.note == 'D-3'){
+                if(respawnLines && event.instrument == 1 && event.note == 'D-3'){
                     rotSpeed = 1;
+                    aberration = 0.005;
                 }
             }
             if(event.pattern){
                 rotSpeed = 2.2;
-                if(brightness == 0 && respawnLines) brightness = 0.2;
+                if(brightness == 0 && respawnLines){
+                    brightness = 0.2;
+                    aberration = 0.01;
+                }
                 if(event.pattern == 16){
                     respawnLines = false;
                 }

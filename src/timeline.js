@@ -1,6 +1,7 @@
 define(function(require) {
     var CargoRoomScene = require("scene/CargoRoomScene");
     var SaturnScene    = require("scene/SaturnScene");
+    var BridgeScene    = require("scene/BridgeScene");
 
     var currentScene = null;
     return {
@@ -13,8 +14,14 @@ define(function(require) {
                 case 0:
                     currentScene = SaturnScene;
                     break;
-                case 8:
+                case 4:
                     currentScene = CargoRoomScene;
+                    break;
+                case 5:
+                    currentScene = BridgeScene;
+                    break;
+                case 6:
+                    currentScene = SaturnScene;
                     break;
             }
         }

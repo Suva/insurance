@@ -78,14 +78,14 @@ define(function(require){
 
         },
         onEvent: function(event){
-            if(event.pattern == 2){
+            if(event.pattern == 1){
                 stage = 1;
                 stage2StartTime = curTime;
             }
-            if(event.pattern == 4) {
+            if(event.pattern == 2) {
                 scene.add(Logo.system);
             }
-            if(event.pattern == 6) {
+            if(event.pattern == 3) {
                 decaying = true;
             }
 

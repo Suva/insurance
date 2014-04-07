@@ -92,7 +92,10 @@ patternnumber = 0
 
 timeline = []
 time = 0.0
-timePerLine = 60.0 / (handler.lpb * handler.bpm)
+timePerLine = 60.0 / (4 * handler.bpm)
+
+print(handler.lbp)
+print(handler.bpm)
 
 for seqno in handler.seq:
     pattern = handler.patterns[seqno]

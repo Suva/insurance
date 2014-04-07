@@ -1,5 +1,6 @@
 define(function(require){
     var TimeLine = require("timeline");
+    var EffectShader = require("EffectShader");
 
     var renderer = new THREE.WebGLRenderer( {antialias: false, alpha:true} );
     renderer.shadowMapEnabled = true;
@@ -70,12 +71,14 @@ define(function(require){
         var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
         var effectBloom = new THREE.BloomPass(0.8);
         var effectVignette = new THREE.ShaderPass(THREE.VignetteShader);
+        effectPass = new THREE.ShaderPass(EffectShader);
         effectCopy.renderToScreen = true;
 
         var composer = new THREE.EffectComposer(renderer);
         composer.addPass(renderModel);
         composer.addPass(effectBloom);
         composer.addPass(effectVignette);
+        composer.addPass(effectPass);
         composer.addPass(effectCopy);
         return composer;
     }

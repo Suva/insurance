@@ -4,6 +4,8 @@
  * @author bhouston / http://exocortex.com
  */
 
+var loadStatus = 0;
+
 var THREE = { REVISION: '66' };
 
 self.console = self.console || {

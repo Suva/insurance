@@ -1,6 +1,4 @@
 define(function(){
-    loadStatus = 0;
-
     var tries = 0;
 
     return {

@@ -13,6 +13,9 @@ define(function(){
             random: random,
             randInt: function (low, high){
                 return low + Math.floor( random() * ( high - low + 1 ) )
+            },
+            randFloat: function(low, high){
+                return low + random() * ( high - low + 1 )
             }
         }
     }

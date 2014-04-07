@@ -1,4 +1,4 @@
-require(["Loader", "renderer", "MusicPlayer", "Timeline"], function(Loader, Renderer, MusicPlayer, Timeline){
+require(["Loader", "renderer", "MusicPlayer", "timeline"], function(Loader, Renderer, MusicPlayer, Timeline){
     Loader.onLoaded(function(){
         Renderer.init();
         Renderer.setTimeLine(Timeline);

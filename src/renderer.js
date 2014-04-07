@@ -1,6 +1,6 @@
 define(function(require){
-    var TimeLine = require("timeline");
     var EffectShader = require("EffectShader");
+    var TimeLine = null;
 
     var renderer = new THREE.WebGLRenderer( {antialias: false, alpha:true} );
     renderer.shadowMapEnabled = true;
@@ -22,6 +22,9 @@ define(function(require){
         },
         setTimeSource: function(argTimeSource){
             timeSource = argTimeSource;
+        },
+        setTimeLine: function(timeLine){
+            TimeLine = timeLine;
         },
         start: function() {
             $("canvas").fadeIn(3000);

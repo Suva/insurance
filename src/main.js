@@ -1,7 +1,7 @@
-require(["Loader", "renderer", "MusicPlayer"], function(Loader, Renderer, MusicPlayer){
-
+require(["Loader", "renderer", "MusicPlayer", "Timeline"], function(Loader, Renderer, MusicPlayer, Timeline){
     Loader.onLoaded(function(){
         Renderer.init();
+        Renderer.setTimeLine(Timeline);
         Renderer.setTimeSource(MusicPlayer);
         MusicPlayer.start(getPattern());
         Renderer.start();

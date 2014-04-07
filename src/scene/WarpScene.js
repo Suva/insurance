@@ -7,6 +7,7 @@ define(function(require){
     var scaling = 0;
     var rotSpeed = 0;
     var respawnLines = true;
+    var brightness = 1;
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 5000);
@@ -40,7 +41,14 @@ define(function(require){
         scene: scene,
         camera: camera,
         render: function(time){
+
             var timePassed = lineTimer.getPassed(time);
+
+            if(brightness > 0){
+                brightness = Math.max(0, brightness - timePassed * 0.3);
+                effectPass.uniforms.brightness.value = Ease.outQuad(brightness);
+            }
+
             if(scaling > 0) {
                 scaling = Math.max(0, scaling - timePassed);
             }
@@ -92,6 +100,7 @@ define(function(require){
             }
             if(event.pattern){
                 rotSpeed = 2.2;
+                if(brightness == 0 && respawnLines) brightness = 0.2;
                 if(event.pattern == 16){
                     respawnLines = false;
                 }

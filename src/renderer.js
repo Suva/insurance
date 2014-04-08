@@ -72,7 +72,7 @@ define(function(require){
 
     function InitializeComposer() {
         var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
-        var effectBloom = new THREE.BloomPass(0.8);
+        effectBloom = new THREE.BloomPass(0.8);
         var effectVignette = new THREE.ShaderPass(THREE.VignetteShader);
         effectPass = new THREE.ShaderPass(EffectShader);
         effectCopy.renderToScreen = true;

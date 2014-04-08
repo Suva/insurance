@@ -38,7 +38,7 @@ define(function(require){
         var sprite = THREE.ImageUtils.loadTexture("images/star.png");
         var particleSystemMaterial = new THREE.ParticleSystemMaterial({
             map: sprite,
-            size: 20,
+            size: 30,
             blending: THREE.AdditiveBlending,
             transparent: true,
             vertexColors: true

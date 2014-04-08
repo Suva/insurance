@@ -58,6 +58,9 @@ define(function(require){
             camera.position.z -=  0.1;
             camera.position.x +=  0.04;
             camera.rotation.z -=  0.001;
+
+            effectPass.uniforms.aberration.value = Math.random() * 0.001;
+
         },
         onEvent: function(ev){
             if(ev.note && ev.instrument == 1 && ev.note == 'C-3'){

@@ -3,6 +3,7 @@ define(function(require) {
     var SaturnScene    = require("scene/SaturnScene");
     var BridgeScene    = require("scene/BridgeScene");
     var WarpScene      = require("scene/WarpScene");
+    var MilkyWayScene  = require("scene/MilkyWayScene");
 
     var currentScene = null;
     return {
@@ -22,7 +23,7 @@ define(function(require) {
                     currentScene = BridgeScene;
                     break;
                 case 6:
-                    currentScene = SaturnScene;
+                    currentScene = MilkyWayScene;
                     break;
                 case 8:
                     currentScene = WarpScene;

@@ -97,10 +97,10 @@ define(function(require){
         },
         onEvent: function(event) {
             if(event.instrument){
-                if(event.instrument == 1 && event.note == 'C-3'){
+                if(event.instrument == 1 && event.note == 'D-3'){
                     scaling = 1;
                 }
-                if(respawnLines && event.instrument == 1 && event.note == 'D-3'){
+                if(respawnLines && event.instrument == 1 && event.note == 'C-3'){
                     rotSpeed = 1;
                     aberration = 0.005;
                 }

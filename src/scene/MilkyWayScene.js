@@ -39,11 +39,10 @@ define(function(require){
         onEvent: function(event){
             if(event.instrument){
                 if(event.instrument == 1 && event.note == 'C-3'){
-                    flash = 1;
-                    console.log("Miaow")
+                    aberration = 1;
                 }
                 if(event.instrument == 1 && event.note == 'D-3'){
-                    aberration = 1;
+                    flash = 1;
                 }
             }
         }

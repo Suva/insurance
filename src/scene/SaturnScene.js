@@ -61,12 +61,23 @@ define(function(require){
         })
     );
 
+    var title3 = new THREE.Mesh(
+        new THREE.PlaneGeometry(8, 4),
+        new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture("images/titles/title-03.png"),
+            transparent: true,
+            depthWrite: false
+        })
+    );
+    title3.rotation.y = Math.PI / 2;
+
     var stage = 0;
     var stage2StartTime = null;
     var curTime = null;
     var startTime = null;
     var decaying = false;
     var timer = new Timer();
+    var sceneOutTimer = new Timer();
     return {
         scene: scene,
         camera: camera,
@@ -82,6 +93,9 @@ define(function(require){
                     spaceship.position.y,
                     spaceship.position.z
                 );
+
+                title3.position = _.clone(spaceship.position);
+                title3.position.x += 30;
 
                 if(stage == 1){
                     camera.position.set(
@@ -106,6 +120,9 @@ define(function(require){
             starSystem.position = camera.position;
 
             if(decaying){
+                if(sceneOutTimer.getTime(time) > 4) {
+                    effectPass.uniforms.brightness.value += timePassed;
+                }
                 Logo.render(time);
             }
 
@@ -122,6 +139,7 @@ define(function(require){
             }
             if(event.pattern == 3) {
                 decaying = true;
+                scene.add(title3);
             }
 
         }

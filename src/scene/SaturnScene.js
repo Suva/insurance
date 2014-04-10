@@ -1,6 +1,7 @@
 define(function(require){
     var StarSystem = require("component/starfield");
     var Logo = require("component/InsuranceLogo");
+    var Timer = require("Timer");
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 5000);
@@ -33,21 +34,46 @@ define(function(require){
     scene.add( createLensFlare() );
 
     Logo.system.rotation.y = Math.PI / 2;
-    Logo.system.scale.set(2, 2, 2)
+    Logo.system.scale.set(2, 2, 2);
     Logo.system.sortParticles = true;
 
+
+    var title = new THREE.Mesh(
+        new THREE.PlaneGeometry(20, 10),
+        new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture("images/titles/title-01.png"),
+            transparent: true,
+            depthWrite: false
+
+        })
+    );
+
+    title.rotation.y = -Math.PI / 2;
+    title.position.set(30, -10, 10);
+    scene.add(title);
+
+    var title2 = new THREE.Mesh(
+        new THREE.PlaneGeometry(8, 4),
+        new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture("images/titles/title-02.png"),
+            transparent: true,
+            depthWrite: false
+        })
+    );
 
     var stage = 0;
     var stage2StartTime = null;
     var curTime = null;
     var startTime = null;
     var decaying = false;
+    var timer = new Timer();
     return {
         scene: scene,
         camera: camera,
         render: function(time){
             if(!startTime) startTime = time;
             curTime = time - startTime;
+            var timePassed = timer.getPassed(time);
 
             if(spaceship){
                 spaceship.position.x = -100 + (time - startTime) * 45;
@@ -57,7 +83,6 @@ define(function(require){
                     spaceship.position.z
                 );
 
-
                 if(stage == 1){
                     camera.position.set(
                         spaceship.position.x - 10 + (time - stage2StartTime) * 4,
@@ -65,9 +90,17 @@ define(function(require){
                         spaceship.position.z + 6
                     );
                     camLight.position = camera.position;
+
                 }
 
                 camera.lookAt(spaceship.position);
+                title2.position = _.clone(spaceship.position);
+                title2.position.y += 1;
+                title2.position.x += 1;
+                if(curTime - stage2StartTime > 4)
+                    title2.material.opacity = Math.max(0, title2.material.opacity - timePassed);
+                else
+                    title2.material.opacity = Math.min(1, title2.material.opacity + timePassed);
 
             }
             starSystem.position = camera.position;
@@ -81,6 +114,8 @@ define(function(require){
             if(event.pattern == 1){
                 stage = 1;
                 stage2StartTime = curTime;
+                scene.add(title2);
+                title2.material.opacity = 0;
             }
             if(event.pattern == 2) {
                 scene.add(Logo.system);

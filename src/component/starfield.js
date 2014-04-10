@@ -43,7 +43,9 @@ define(function(require){
             transparent: true,
             vertexColors: true
         });
-        return new THREE.ParticleSystem(geo, particleSystemMaterial);
+        var particleSystem = new THREE.ParticleSystem(geo, particleSystemMaterial);
+        particleSystem.sortParticles = true;
+        return  particleSystem;
     }
 
 

@@ -6,9 +6,30 @@ define(function(require) {
     var MilkyWayScene  = require("scene/MilkyWayScene");
 
     var currentScene = null;
+
+    var allScenes = [
+        CargoRoomScene,
+        SaturnScene,
+        BridgeScene,
+        WarpScene,
+        MilkyWayScene
+    ];
+
+    var renderScene = new THREE.Scene();
+    renderScene.fog = new THREE.FogExp2(0, 0);
+
+    _.each(allScenes, function(scene){
+        renderScene.add(scene.scene);
+    });
+
+    var oldScene = null;
+
     return {
         getScene: function(){
-            return currentScene;
+            return {
+                renderScene: renderScene,
+                sceneObject: currentScene
+            };
         },
         onEvent: function(event){
             if(typeof(event.pattern) == 'undefined') return;
@@ -28,6 +49,19 @@ define(function(require) {
                 case 8:
                     currentScene = WarpScene;
                     break;
+            }
+
+            if(oldScene != currentScene){
+                _.each(oldScene ? [oldScene, currentScene] : allScenes, function(scene){
+                    var visibility = (scene == currentScene) ? true : false;
+                    scene.scene.traverse(function(obj) {
+                        obj.visible = visibility;
+                    })
+                });
+                if(currentScene.init){
+                    currentScene.init({renderScene: renderScene});
+                }
+                oldScene = currentScene;
             }
         }
     }

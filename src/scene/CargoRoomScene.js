@@ -2,7 +2,7 @@ define(function(require){
     var PlasmaShader = require("PlasmaShader"),
         Timer = require("Timer");
 
-    var scene = new THREE.Scene();
+    var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 1000);
     var cylinderMaterial;
     var cargoRoom;
@@ -19,7 +19,6 @@ define(function(require){
         });
         cargoRoom = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
         scene.add(cargoRoom);
-        console.log(cargoRoom);
     });
 
     var light = new THREE.PointLight(0x3366FF, 0.4, 200);
@@ -33,8 +32,6 @@ define(function(require){
     lightSystem.add(light2);
 
     scene.add(lightSystem);
-
-    console.log(light);
 
     var lightTimer = new Timer();
     var flashTimer = new Timer();
@@ -64,12 +61,10 @@ define(function(require){
         },
         onEvent: function(ev){
             if(ev.note && ev.instrument == 1 && ev.note == 'C-3'){
-                console.log(ev);
                 light.intensity = 2;
             }
 
             if(ev.note && ev.instrument == 1 && ev.note == 'D-3'){
-                console.log(ev);
                 light2.intensity = 2;
             }
         }

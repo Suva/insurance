@@ -28,11 +28,15 @@ define(function(require){
         },
         start: function() {
             $("canvas").fadeIn(3000);
+            var oldScene = null;
             function render() {
                 var events = timeSource.getEvents();
 
                 dispatchEvents(events, TimeLine);
-                scene = TimeLine.getScene();
+                var sceneObj = TimeLine.getScene();
+                var renderScene = sceneObj.renderScene;
+
+                scene = sceneObj.sceneObject;
 
                 if(!scene){
                     requestAnimationFrame(render);
@@ -45,14 +49,25 @@ define(function(require){
                 requestAnimationFrame(render);
 
 
-                renderModel.scene = scene.scene;
+                renderModel.scene = renderScene;
                 renderModel.camera = scene.camera;
 
                 composer.render();
             }
             render();
         },
-        renderer: renderer
+        renderer: renderer,
+        prerender: function(){
+            var renderCam = new THREE.PerspectiveCamera(80, 16 / 9, 0.1, 5000);
+            renderCam.position.set(0, 0, -1000);
+            renderCam.lookAt(new THREE.Vector3());
+
+            var scene = TimeLine.getScene().renderScene;
+            renderer.render(scene, renderCam);
+
+
+
+        }
     };
 
     function dispatchEvents(events, target) {

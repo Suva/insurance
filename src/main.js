@@ -3,6 +3,7 @@ require(["Loader", "renderer", "MusicPlayer", "timeline"], function(Loader, Rend
         Renderer.init();
         Renderer.setTimeLine(Timeline);
         Renderer.setTimeSource(MusicPlayer);
+        Renderer.prerender();
         MusicPlayer.start(getPattern());
         Renderer.start();
     });
@@ -15,5 +16,4 @@ require(["Loader", "renderer", "MusicPlayer", "timeline"], function(Loader, Rend
         }
         return pattern;
     }
-
 });

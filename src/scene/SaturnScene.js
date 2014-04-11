@@ -3,7 +3,7 @@ define(function(require){
     var Logo = require("component/InsuranceLogo");
     var Timer = require("Timer");
 
-    var scene = new THREE.Scene();
+    var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 5000);
     camera.lookAt(new THREE.Vector3());
 
@@ -36,7 +36,7 @@ define(function(require){
     Logo.system.rotation.y = Math.PI / 2;
     Logo.system.scale.set(2, 2, 2);
     Logo.system.sortParticles = true;
-
+    scene.add(Logo.system);
 
     var title = new THREE.Mesh(
         new THREE.PlaneGeometry(20, 10),
@@ -60,6 +60,7 @@ define(function(require){
             depthWrite: false
         })
     );
+    scene.add(title2);
 
     var title3 = new THREE.Mesh(
         new THREE.PlaneGeometry(8, 4),
@@ -70,6 +71,7 @@ define(function(require){
         })
     );
     title3.rotation.y = Math.PI / 2;
+    scene.add(title3);
 
     var stage = 0;
     var stage2StartTime = null;
@@ -131,18 +133,24 @@ define(function(require){
             if(event.pattern == 1){
                 stage = 1;
                 stage2StartTime = curTime;
-                scene.add(title2);
+                title2.visible = true;
                 title2.material.opacity = 0;
             }
             if(event.pattern == 2) {
-                scene.add(Logo.system);
+                Logo.system.visible = true;
             }
             if(event.pattern == 3) {
                 decaying = true;
-                scene.add(title3);
+                title3.visible = true;
             }
 
+        },
+        init: function(){
+            title2.visible = false;
+            title3.visible = false;
+            Logo.system.visible = false;
         }
+
     };
 
     function lensFlareUpdateCallback( object ) {

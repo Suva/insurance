@@ -3,6 +3,7 @@ define(function(require){
     var Timer = require("Timer");
     var Ease = require("ease");
     var Starfield = require("component/starfield");
+    var renderScene = null;
 
     var scaling = 0;
     var rotSpeed = 0;
@@ -10,9 +11,8 @@ define(function(require){
     var brightness = 1;
     var aberration = 0;
 
-    var scene = new THREE.Scene();
+    var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 5000);
-    scene.fog = new THREE.FogExp2(0, 0.008);
 
     camera.position.set(3, 2, 3);
     camera.lookAt(new THREE.Vector3(0, 0, -8));
@@ -82,8 +82,8 @@ define(function(require){
                 ((Math.sin(time / 1.8884) * Math.sin(time) * Math.sin(time * 2.4447)) - 1) * 0.01;
 
 
-            if(!respawnLines && scene.fog.density > 0){
-                scene.fog.density *= 0.95;
+            if(!respawnLines && renderScene.fog.density > 0){
+                renderScene.fog.density *= 0.95;
             }
 
             starSystem.rotation.x += timePassed * 0.01;
@@ -115,6 +115,10 @@ define(function(require){
                     respawnLines = false;
                 }
             }
+        },
+        init: function(args){
+            renderScene = args.renderScene;
+            renderScene.fog.density = 0.008;
         }
     };
 

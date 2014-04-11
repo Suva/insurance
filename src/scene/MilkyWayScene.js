@@ -3,7 +3,7 @@ define(function(require){
     var Starfield = require("component/starfield");
     var Ease = require("ease");
 
-    var scene = new THREE.Scene();
+    var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(70, 16 / 9, 0.1, 5000);
 
     camera.position.set(0, 0.6, 2.5);

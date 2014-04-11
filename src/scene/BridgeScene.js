@@ -1,12 +1,12 @@
 define(function(){
-    var scene = new THREE.Scene();
+    var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 5000);
 
     var tex = [
         THREE.ImageUtils.loadTexture("images/speissship.jpg"),
         THREE.ImageUtils.loadTexture("images/speissship2.jpg"),
         THREE.ImageUtils.loadTexture("images/speissship3.jpg")
-    ]
+    ];
 
     var screen = new THREE.Mesh(
         new THREE.PlaneGeometry(16, 9),

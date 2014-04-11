@@ -2,7 +2,7 @@ define(function(require){
     var StarSystem = require("component/starfield");
     var InsuranceLogo = require("component/InsuranceLogo");
 
-    var scene = new THREE.Scene();
+    var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 5000);
 
     camera.position.z = 10;

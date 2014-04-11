@@ -80,9 +80,9 @@ define(function(require){
             light.intensity = Math.max(0, light.intensity - passed * 2);
             light2.intensity = Math.max(0, light2.intensity - passed * 2);
             camera.position.z -=  0.2;
-            camera.position.x +=  0.0003;
-            camera.rotation.z -=  0.0001;
-            title.position.z += 0.2;
+            camera.position.x +=  0.0003 * passed;
+            camera.rotation.z -=  0.0001 * passed;
+            title.position.z += 0.2 * passed;
 
             if(title.position.distanceTo(camera.position) < 20){
                 title.material.opacity = Math.max(0, (title.position.distanceTo(camera.position) - 5) / 15);

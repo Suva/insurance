@@ -43,7 +43,7 @@ define(function(){
 
     var uniforms = {
         "_time": { type: "f", value: 0 },
-        "u_k": { type: "v2", value: new THREE.Vector2(Math.PI * 50, Math.PI * 50) }
+        "u_k": { type: "v2", value: new THREE.Vector2(Math.PI * 80, Math.PI * 80) }
     };
 
     return {

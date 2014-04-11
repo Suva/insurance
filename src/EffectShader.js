@@ -3,6 +3,7 @@ define(function(){
        uniforms: {
            "tDiffuse": { type: "t", value: null },
            brightness: {type: "f", value: 0},
+           globalBrightness: {type: "f", value: 1},
            aberration: {type: "f", value: 0}
        },
        fragmentShader:[
@@ -10,15 +11,21 @@ define(function(){
             "varying vec2 vUv;",
             "uniform sampler2D tDiffuse;",
             "uniform float brightness;",
+            "uniform float globalBrightness;",
             "uniform float aberration;",
+            "float rand(vec2 co){",
+            "   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);",
+            "}",
             "void main(void)",
             "{",
-                "vec3 color = texture2D(tDiffuse,vUv).rgb;",
+                "vec2 rUv = vUv + (vec2(rand(vUv*globalBrightness)*0.1+0.95, rand(vUv*globalBrightness)*0.2+0.8) * 0.01);",
+                "vec3 color = texture2D(tDiffuse,rUv).rgb;",
                 "if(aberration > 0.0){",
-                "   color.r = texture2D(tDiffuse,vUv + vec2(aberration, 0)).r;",
-                "   color.g = texture2D(tDiffuse,vUv + vec2(-aberration, 0)).g;",
+                "   color.r = texture2D(tDiffuse,rUv + vec2(aberration, 0)).r;",
+                "   color.g = texture2D(tDiffuse,rUv + vec2(-aberration, 0)).g;",
                 "}",
-                "gl_FragColor = vec4(color+brightness,1.0);",
+                "vec3 randColor = vec3(rand(rUv*globalBrightness)*0.1+0.95, rand(rUv*globalBrightness)*0.1+0.95, rand(rUv*globalBrightness)*0.1+0.95);",
+                "gl_FragColor = vec4((color+brightness)*globalBrightness*randColor,1.0);",
             "}"
        ].join("\n"),
        vertexShader:[

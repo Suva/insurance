@@ -48,10 +48,10 @@ define(function(require){
 
                 requestAnimationFrame(render);
 
-
                 renderModel.scene = renderScene;
                 renderModel.camera = scene.camera;
 
+                effectPass.uniforms.globalBrightness.value = Math.random() * 0.05 + 0.95;
                 composer.render();
             }
             render();
@@ -64,9 +64,6 @@ define(function(require){
 
             var scene = TimeLine.getScene().renderScene;
             renderer.render(scene, renderCam);
-
-
-
         }
     };
 

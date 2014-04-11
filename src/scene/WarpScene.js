@@ -101,7 +101,7 @@ define(function(require){
                     scaling = 1;
                 }
                 if(respawnLines && event.instrument == 1 && event.note == 'C-3'){
-                    rotSpeed = 1;
+                    if(rotSpeed < 1) rotSpeed = 1;
                     aberration = 0.005;
                 }
             }

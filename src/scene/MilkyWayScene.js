@@ -6,8 +6,8 @@ define(function(require){
     var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(70, 16 / 9, 0.1, 5000);
 
-    camera.position.set(0, 0.6, 2.5);
-    camera.lookAt(new THREE.Vector3(0, -1, 0));
+    camera.position.set(0, 0.8, 3);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     var milkyWay;
     new THREE.JSONLoader().load("models/milkyway.js", function(geometry, materials){
@@ -17,6 +17,17 @@ define(function(require){
 
     var starSystem = Starfield.create(33);
     scene.add(starSystem);
+
+    var title = new THREE.Mesh(
+        new THREE.PlaneGeometry(4, 1),
+        new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture("images/titles/title-06.png"),
+            transparent: true,
+            depthWrite: false
+        })
+    );
+    title.position.set(2, 1.2, -1);
+    scene.add(title);
 
     var timer = new Timer(),
         flash = 0,

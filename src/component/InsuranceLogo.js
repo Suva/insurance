@@ -189,7 +189,7 @@ define(function(require){
 
     var particleSystemMaterial = new THREE.ParticleSystemMaterial({
         map: THREE.ImageUtils.loadTexture("images/star.png"),
-        size: 1,
+        size: 0.9,
         transparent: true,
         blending: THREE.AdditiveBlending,
         vertexColors: true

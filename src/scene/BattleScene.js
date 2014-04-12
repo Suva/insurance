@@ -4,7 +4,7 @@ define(function(require){
     var loader = new THREE.JSONLoader(true);
     var origin = new THREE.Vector3();
     var StarSystem = require("component/starfield");
-    var starfield = StarSystem.create(33);
+    var starfield = StarSystem.create(33, 100);
 
     scene.add(starfield);
 
@@ -32,8 +32,9 @@ define(function(require){
     return {
         scene: scene,
         camera: camera,
-        render: render
-    }
+        render: render,
+        init: init
+    };
 
     function render(time){
         ship.rotation.y += 0.01;

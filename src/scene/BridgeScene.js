@@ -81,7 +81,6 @@ define(function(require){
         },
         onEvent: function(ev){
             if(ev.note && ev.instrument == 1 && (ev.note == 'C-3' || ev.note == 'D-3')){
-                screen.material.map = tex[texPos = (texPos + 1) % tex.length]
             }
         }
     }

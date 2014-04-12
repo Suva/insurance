@@ -1,6 +1,7 @@
 require(["Loader", "renderer", "MusicPlayer", "timeline"], function(Loader, Renderer, MusicPlayer, Timeline){
     Loader.onLoaded(function(){
         Renderer.init();
+        Timeline.setRenderer(Renderer.renderer);
         Renderer.setTimeLine(Timeline);
         Renderer.setTimeSource(MusicPlayer);
         Renderer.prerender();

@@ -5,6 +5,8 @@ define(function(require) {
     var WarpScene      = require("scene/WarpScene");
     var MilkyWayScene  = require("scene/MilkyWayScene");
 
+    var renderer = null;
+
     var currentScene = null;
 
     var allScenes = [
@@ -62,10 +64,13 @@ define(function(require) {
                     })
                 });
                 if(currentScene.init){
-                    currentScene.init({renderScene: renderScene});
+                    currentScene.init({renderScene: renderScene, renderer: renderer});
                 }
                 oldScene = currentScene;
             }
+        },
+        setRenderer: function(r){
+            renderer = r;
         }
     }
 });

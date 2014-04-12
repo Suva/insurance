@@ -32,8 +32,7 @@ define(function(require){
     return {
         scene: scene,
         camera: camera,
-        render: render,
-        init: init
+        render: render
     };
 
     function render(time){

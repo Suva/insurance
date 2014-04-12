@@ -46,6 +46,9 @@ define(function(require) {
                 case 6:
                     currentScene = MilkyWayScene;
                     break;
+                case 7:
+                    currentScene = SaturnScene;
+                    break;
                 case 8:
                     currentScene = WarpScene;
                     break;

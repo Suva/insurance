@@ -73,6 +73,18 @@ define(function(require){
     title3.rotation.y = Math.PI / 2;
     scene.add(title3);
 
+
+    var title4 = new THREE.Mesh(
+        new THREE.PlaneGeometry(8, 4),
+        new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture("images/titles/title-07.png"),
+            transparent: true,
+            depthWrite: false
+        })
+    );
+    title4.rotation.y = -(Math.PI / 2);
+    scene.add(title4);
+
     var stage = 0;
     var stage2StartTime = null;
     var curTime = null;
@@ -80,6 +92,7 @@ define(function(require){
     var decaying = false;
     var timer = new Timer();
     var sceneOutTimer = new Timer();
+    var stage3Timer = new Timer();
     return {
         scene: scene,
         camera: camera,
@@ -118,10 +131,44 @@ define(function(require){
                 else
                     title2.material.opacity = Math.min(1, title2.material.opacity + timePassed);
 
+
+                if(stage == 2){
+                    var stage3Time = stage3Timer.getTime(time);
+                    if(stage3Time < 4.6){
+                        camera.position.set(
+                            spaceship.position.x + 6 - stage3Time * 2,
+                            spaceship.position.y + 3,
+                            spaceship.position.z - 6
+                        );
+                    }
+                    camLight.position = camera.position;
+                    camera.lookAt(new THREE.Vector3(
+                        spaceship.position.x + 8,
+                        spaceship.position.y - 2,
+                        spaceship.position.z
+                    ));
+
+                    spaceship.rotation.x = Math.random() * stage3Time / 100;
+                    spaceship.position.y = Math.random() * stage3Time / 100;
+
+                    if(stage3Time > 4) {
+                        effectPass.uniforms.brightness.value += stage3Timer.getPassed(time);
+                    }
+
+                    if(stage3Time > 4.5) {
+                        spaceship.scale.x = stage3Time * 5;
+                        title4.visible = false;
+                    }
+
+                    title4.position = _.clone(spaceship.position);
+                    title4.position.x += 10;
+
+                }
+
             }
             starSystem.position = camera.position;
 
-            if(decaying){
+            if(decaying && stage < 2){
                 if(sceneOutTimer.getTime(time) > 4) {
                     effectPass.uniforms.brightness.value += timePassed;
                 }
@@ -142,6 +189,9 @@ define(function(require){
             if(event.pattern == 3) {
                 decaying = true;
                 title3.visible = true;
+            }
+            if(event.pattern == 7){
+                stage = 2;
             }
 
         },

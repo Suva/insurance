@@ -1,5 +1,5 @@
 define(function(require){
-    var scene = require("scene/MilkyWayScene");
+    var scene = require("scene/BattleScene");
     var renderScene = new THREE.Scene();
     renderScene.fog = new THREE.FogExp2(0, 0);
     renderScene.add(scene.scene);

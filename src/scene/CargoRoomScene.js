@@ -1,6 +1,7 @@
 define(function(require){
     var PlasmaShader = require("PlasmaShader"),
-        Timer = require("Timer");
+        Timer = require("Timer")
+        Ease = require("ease");
 
     var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 1000);
@@ -82,10 +83,10 @@ define(function(require){
             camera.position.z -=  0.2;
             camera.position.x +=  0.0003 * passed;
             camera.rotation.z -=  0.0001 * passed;
-            title.position.z += 0.2 * passed;
+            title.position.z += passed * 5;
 
             if(title.position.distanceTo(camera.position) < 20){
-                title.material.opacity = Math.max(0, (title.position.distanceTo(camera.position) - 5) / 15);
+                title.material.opacity = Ease.outQuart(Math.max(0, (title.position.distanceTo(camera.position) - 5) / 15));
             }
 
             _.each(warpLights.children, function(light){

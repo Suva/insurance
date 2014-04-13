@@ -28,7 +28,6 @@ define(function(require){
         },
         start: function() {
             $("canvas").fadeIn(3000);
-            var oldScene = null;
             function render() {
                 var events = timeSource.getEvents();
 
@@ -56,15 +55,7 @@ define(function(require){
             }
             render();
         },
-        renderer: renderer,
-        prerender: function(){
-            var renderCam = new THREE.PerspectiveCamera(80, 16 / 9, 0.1, 5000);
-            renderCam.position.set(0, 0, -1000);
-            renderCam.lookAt(new THREE.Vector3());
-
-            var scene = TimeLine.getScene().renderScene;
-            renderer.render(scene, renderCam);
-        }
+        renderer: renderer
     };
 
     function dispatchEvents(events, target) {

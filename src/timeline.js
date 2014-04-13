@@ -5,6 +5,7 @@ define(function(require) {
     var WarpScene      = require("scene/WarpScene");
     var MilkyWayScene  = require("scene/MilkyWayScene");
     var BattleScene    = require("scene/BattleScene");
+    var PirateScene    = require("scene/PirateScene");
 
     var renderScene;
 
@@ -21,13 +22,14 @@ define(function(require) {
 
     var stageTwoScenes = [
         WarpScene,
-        BattleScene
+        BattleScene,
+        PirateScene
     ];
 
     var allScenes = stage1Scenes;
 
     function initRenderScene(scenes){
-        var renderTarget = new THREE.WebGLRenderTarget(10, 10);
+        var renderTarget = new THREE.WebGLRenderTarget(16, 9);
         var renderCam = new THREE.PerspectiveCamera(80, 16 / 9, 0.1, 5000);
         var renderScene = new THREE.Scene();
         allScenes = scenes;
@@ -80,14 +82,16 @@ define(function(require) {
                 case 17:
                     currentScene = BattleScene;
                     break;
+                case 18:
+                    currentScene = PirateScene;
+                    break;
             }
 
             if(oldScene != currentScene){
                 _.each(oldScene ? [oldScene, currentScene] : allScenes, function(scene){
-                    var visibility = (scene == currentScene) ? true : false;
+                    var visibility = (scene == currentScene);
                     scene.scene.traverse(function(obj) {
                         obj.visible = visibility;
-                        if(visibility == 1) console.log("*");
                     })
                 });
                 if(currentScene.init){

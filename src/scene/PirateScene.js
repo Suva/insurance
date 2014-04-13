@@ -14,9 +14,10 @@ define(function(require){
     camera.position.set(0, 0, 5);
     camera.lookAt(screen.position);
 
-    var text = Text.drawString("surrender your ship", scene, new THREE.Vector3(-3.4, -3, 0));
+    var text = Text.drawString("you are surrounded", scene, new THREE.Vector3(-3.4, -3, 0));
 
     var timer = new Timer();
+    var phase = 0;
 
     return {
         scene: scene,
@@ -24,6 +25,18 @@ define(function(require){
         render: function(time){
             camera.position.z -= timer.getPassed(time) * 0.05;
             text.render(time);
+
+            if(timer.getTime(time) > 2 && phase == 0){
+                text.destroy();
+                text = Text.drawString("lower the shields", scene, new THREE.Vector3(-3, -3, 0));
+                phase = 1
+            }
+
+            if(timer.getTime(time) > 4 && phase == 1){
+                text.destroy();
+                text = Text.drawString("and surrender the cargo", scene, new THREE.Vector3(-4, -3, 0));
+                phase = 2
+            }
 
         }
     }

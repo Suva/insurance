@@ -30,7 +30,7 @@ define(function(require){
         var charScale = 0.4;
 
         var timer = new Timer();
-        var charStep = 0.1;
+        var charStep = 0.05;
         var renderedChar = null;
         var chars = [];
 
@@ -53,7 +53,12 @@ define(function(require){
                 _.each(chars, function(obj){
                     var scale = obj.scale.x;
                     if(scale > charScale)
-                        obj.scale.multiplyScalar(0.95);
+                        obj.scale.multiplyScalar(0.90);
+                })
+            },
+            destroy: function(){
+                _.each(chars, function(obj){
+                    scene.remove(obj);
                 })
             }
         }

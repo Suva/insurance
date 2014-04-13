@@ -35,7 +35,7 @@ define(function(require){
     var timer = new Timer();
     function render(time) {
         scene.rotation.y += 0.005;
-        scene.rotation.z += 0.003;
+        scene.rotation.z += 0.001;
     }
 
     return {

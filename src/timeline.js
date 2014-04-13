@@ -85,6 +85,10 @@ define(function(require) {
                 case 18:
                     currentScene = PirateScene;
                     break;
+                case 19:
+                    currentScene = BattleScene;
+                    break;
+
             }
 
             if(oldScene != currentScene){

@@ -1,6 +1,6 @@
 define(function(require){
     var StarSystem = require("component/starfield");
-    var Timer = require("timer");
+    var Timer = require("Timer");
 
     var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 10000);

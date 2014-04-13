@@ -4,6 +4,7 @@ define(function(require) {
     var BridgeScene    = require("scene/BridgeScene");
     var WarpScene      = require("scene/WarpScene");
     var MilkyWayScene  = require("scene/MilkyWayScene");
+    var BattleScene    = require("scene/BattleScene");
 
     var renderer = null;
 
@@ -14,7 +15,8 @@ define(function(require) {
         SaturnScene,
         BridgeScene,
         WarpScene,
-        MilkyWayScene
+        MilkyWayScene,
+        BattleScene
     ];
 
     var renderScene = new THREE.Scene();
@@ -54,6 +56,9 @@ define(function(require) {
                 case 8:
                     currentScene = WarpScene;
                     break;
+                case 17:
+                    currentScene = BattleScene;
+                    break;
             }
 
             if(oldScene != currentScene){
@@ -61,6 +66,7 @@ define(function(require) {
                     var visibility = (scene == currentScene) ? true : false;
                     scene.scene.traverse(function(obj) {
                         obj.visible = visibility;
+                        if(visibility == 1) console.log("*");
                     })
                 });
                 if(currentScene.init){

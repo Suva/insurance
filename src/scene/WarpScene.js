@@ -20,8 +20,9 @@ define(function(require){
     var lineSystem = createLineSystem(80, 215);
     scene.add(lineSystem);
 
+    var loader = new THREE.JSONLoader();
     var spaceship;
-    new THREE.JSONLoader().load("models/spaceship-seven.js", function(geometry, materials){
+    loader.load("models/spaceship-seven.js", function(geometry, materials){
         var spaceshipObj = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
         spaceshipObj.rotation.y = Math.PI / 2;
         spaceship = new THREE.Object3D();
@@ -29,6 +30,41 @@ define(function(require){
         spaceship.add(spaceshipObj);
         scene.add(spaceship);
     });
+
+    var fleet;
+    var leadShip;
+    loader.load("models/spaceship-five.js", function(geometry, materials){
+        var ship;
+        materials[1].bumpMap.bumpScale = 0.0001;
+        ship = new THREE.Object3D();
+        ship.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials)));
+
+        var tailLight = new THREE.PointLight(0xCCCCFF, 2, 3);
+        tailLight.position.set(0, 0, 5.2);
+        ship.add(tailLight);
+
+        ship.rotation.y = Math.PI;
+        ship.scale.multiplyScalar(0.4);
+
+        fleet = new THREE.Object3D();
+        _.each(_.range(0, 3), function(idx){
+            var shipCopy = ship.clone();
+            shipCopy.position.x = (idx - 1) * 10;
+            shipCopy.position.z = -10;
+            if(idx != 1) {
+                shipCopy.position.z -= 5;
+                shipCopy.direction = new THREE.Vector3((idx - 1) * 0.1, 0, 1);
+            } else {
+                leadShip = shipCopy;
+                shipCopy.position.y += 1;
+                shipCopy.direction = new THREE.Vector3(0, 0.03, 1);
+            }
+            fleet.add(shipCopy);
+        });
+
+        scene.add(fleet);
+    });
+
 
     var starSystem = Starfield.create(33);
     scene.add(starSystem);
@@ -46,7 +82,7 @@ define(function(require){
             var timePassed = lineTimer.getPassed(time);
 
             if(brightness > 0){
-                brightness = Math.max(0, brightness - timePassed * 0.3);
+                brightness = Math.max(0, brightness - timePassed);
                 effectPass.uniforms.brightness.value = Ease.outQuad(brightness);
             }
 
@@ -86,12 +122,24 @@ define(function(require){
                 renderScene.fog.density *= 0.95;
             }
 
+            if(!respawnLines){
+                _.each(fleet.children, function(ship){
+                    ship.position.add(ship.direction);
+                })
+
+                camera.lookAt(leadShip.position);
+            }
+
             starSystem.rotation.x += timePassed * 0.01;
             starSystem.rotation.z -= timePassed * 0.1;
 
             if(aberration > 0){
                 aberration = Math.max(0, aberration - timePassed * 0.03);
                 effectPass.uniforms.aberration.value = aberration;
+            }
+
+            if(leadShip.position.z > 0 && lineSystem.visible){
+                lineSystem.traverse(function(obj) { obj.visible = false; });
             }
 
         },
@@ -108,17 +156,23 @@ define(function(require){
             if(event.pattern){
                 rotSpeed = 2.2;
                 if(brightness == 0 && respawnLines){
-                    brightness = 0.2;
+                    brightness = 0.5;
                     aberration = 0.01;
                 }
                 if(event.pattern == 16){
                     respawnLines = false;
+                    fleet.traverse(function(obj){ obj.visible = true });
                 }
             }
+
         },
         init: function(args){
             renderScene = args.renderScene;
             renderScene.fog.density = 0.008;
+            fleet.traverse(function(obj){ obj.visible = false });
+            _.each(fleet.children, function(ship){
+                ship.position.z = -200;
+            })
         }
     };
 

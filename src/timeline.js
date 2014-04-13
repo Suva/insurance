@@ -6,25 +6,43 @@ define(function(require) {
     var MilkyWayScene  = require("scene/MilkyWayScene");
     var BattleScene    = require("scene/BattleScene");
 
+    var renderScene;
+
     var renderer = null;
 
     var currentScene = null;
 
-    var allScenes = [
+    var stage1Scenes = [
         CargoRoomScene,
         SaturnScene,
         BridgeScene,
-        WarpScene,
         MilkyWayScene,
+    ];
+
+    var stageTwoScenes = [
+        WarpScene,
         BattleScene
     ];
 
-    var renderScene = new THREE.Scene();
-    renderScene.fog = new THREE.FogExp2(0, 0);
+    var allScenes = stage1Scenes;
 
-    _.each(allScenes, function(scene){
-        renderScene.add(scene.scene);
-    });
+    function initRenderScene(scenes){
+        var renderTarget = new THREE.WebGLRenderTarget(10, 10);
+        var renderCam = new THREE.PerspectiveCamera(80, 16 / 9, 0.1, 5000);
+        var renderScene = new THREE.Scene();
+        allScenes = scenes;
+
+        renderCam.position.set(0, 0, -1000);
+        renderCam.lookAt(new THREE.Vector3());
+
+        renderScene.fog = new THREE.FogExp2(0, 0);
+
+        _.each(scenes, function(scene){
+            renderScene.add(scene.scene);
+        });
+        renderer.render(renderScene, renderCam, renderTarget);
+        return renderScene;
+    }
 
     var oldScene = null;
 
@@ -36,6 +54,7 @@ define(function(require) {
             };
         },
         onEvent: function(event){
+            var nextScene = null;
             if(typeof(event.pattern) == 'undefined') return;
             switch(event.pattern){
                 case 0:
@@ -54,6 +73,8 @@ define(function(require) {
                     currentScene = SaturnScene;
                     break;
                 case 8:
+                    oldScene = null;
+                    renderScene = initRenderScene(stageTwoScenes);
                     currentScene = WarpScene;
                     break;
                 case 17:
@@ -77,6 +98,7 @@ define(function(require) {
         },
         setRenderer: function(r){
             renderer = r;
+            renderScene = initRenderScene(stage1Scenes);
         }
     }
 });

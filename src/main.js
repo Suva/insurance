@@ -4,7 +4,7 @@ require(["Loader", "renderer", "MusicPlayer", "timeline"], function(Loader, Rend
         Timeline.setRenderer(Renderer.renderer);
         Renderer.setTimeLine(Timeline);
         Renderer.setTimeSource(MusicPlayer);
-        Renderer.prerender();
+        // Renderer.prerender();
         MusicPlayer.start(getPattern());
         Renderer.start();
     });

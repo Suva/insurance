@@ -6,7 +6,10 @@ define(function(require){
 
     var screen = new THREE.Mesh(
         new THREE.PlaneGeometry(16, 9),
-        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("images/koll.jpg")})
+        new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture("images/koll.jpg"),
+            transparent: true
+        })
     );
 
     scene.add(screen);
@@ -22,22 +25,30 @@ define(function(require){
     return {
         scene: scene,
         camera: camera,
-        render: function(time){
-            camera.position.z -= timer.getPassed(time) * 0.05;
+        render: function(time) {
+            var passed = timer.getPassed(time);
+            camera.position.z -= passed * 0.05;
             text.render(time);
 
-            if(timer.getTime(time) > 2 && phase == 0){
+            if (timer.getTime(time) > 1.6 && phase == 0) {
                 text.destroy();
                 text = Text.drawString("lower the shields", scene, new THREE.Vector3(-3, -3, 0));
                 phase = 1
             }
 
-            if(timer.getTime(time) > 4 && phase == 1){
+            if (timer.getTime(time) > 3 && phase == 1) {
                 text.destroy();
                 text = Text.drawString("and surrender the cargo", scene, new THREE.Vector3(-4, -3, 0));
                 phase = 2
             }
 
+            if (timer.getTime(time) > 4.5) {
+                screen.material.opacity -= passed;
+                text.setCharScale(0);
+            }
+        },
+        init: function(){
+            effectBloom.copyUniforms.opacity.value = 0.8;
         }
     }
 });

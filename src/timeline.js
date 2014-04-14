@@ -4,7 +4,7 @@ define(function(require) {
     var BridgeScene    = require("scene/BridgeScene");
     var WarpScene      = require("scene/WarpScene");
     var MilkyWayScene  = require("scene/MilkyWayScene");
-    var BattleScene    = require("scene/BattleScene");
+    var EnemyShipScene    = require("scene/EnemyShipScene");
     var PirateScene    = require("scene/PirateScene");
 
     var renderScene;
@@ -22,7 +22,7 @@ define(function(require) {
 
     var stageTwoScenes = [
         WarpScene,
-        BattleScene,
+        EnemyShipScene,
         PirateScene
     ];
 
@@ -80,13 +80,13 @@ define(function(require) {
                     currentScene = WarpScene;
                     break;
                 case 17:
-                    currentScene = BattleScene;
+                    currentScene = EnemyShipScene;
                     break;
                 case 18:
                     currentScene = PirateScene;
                     break;
                 case 19:
-                    currentScene = BattleScene;
+                    currentScene = EnemyShipScene;
                     break;
 
             }

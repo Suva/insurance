@@ -10,11 +10,11 @@ define(function(require){
 
     scene.add(starField);
 
-    camera.position.set(5, 6, 12);
+    camera.position.set(-5, 5, 8);
     camera.lookAt(origin);
 
+    var ship;
     loader.load("models/spaceship-five.js", function(geometry, materials){
-        var ship;
         materials[1].bumpMap.bumpScale = 0.0001;
         ship = new THREE.Object3D();
         ship.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials)));
@@ -23,7 +23,7 @@ define(function(require){
         tailLight.position.set(0, 0, 5.2);
         ship.add(tailLight);
 
-        ship.rotation.y = Math.PI;
+        ship.rotation.y = -1.5;
 
         scene.add(ship);
     });
@@ -34,8 +34,12 @@ define(function(require){
 
     var timer = new Timer();
     function render(time) {
-        scene.rotation.y += 0.005;
-        scene.rotation.z += 0.001;
+        var passed = timer.getPassed(time);
+        ship.rotation.y -= 0.22 * passed;
+        starField.rotation.z += 0.05 * passed;
+        starField.rotation.y += 0.1 * passed;
+        camera.position.y += passed * 0.5;
+        camera.position.z += passed;
     }
 
     return {

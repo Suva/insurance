@@ -1,5 +1,5 @@
 define(function(require){
-    var scene = require("scene/PirateScene");
+    var scene = require("scene/EnemyShipScene");
 
     var renderScene = new THREE.Scene();
     var renderer = null;

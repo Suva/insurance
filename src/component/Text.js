@@ -60,6 +60,9 @@ define(function(require){
                 _.each(chars, function(obj){
                     scene.remove(obj);
                 })
+            },
+            setCharScale: function(scale){
+                charScale = scale;
             }
         }
     }

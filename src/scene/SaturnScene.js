@@ -29,7 +29,6 @@ define(function(require){
     new THREE.JSONLoader().load("models/spaceship-seven.js", function(geometry, materials){
         spaceship = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
         spaceship.position.set(0, 0, -10);
-        console.log(spaceship);
         scene.add(spaceship);
     });
 

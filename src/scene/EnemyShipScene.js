@@ -18,23 +18,7 @@ define(function(require){
 
     var projectiles = [];
 
-    var projectile = new THREE.Object3D();
-
-    projectile.add(new THREE.Mesh(
-        new THREE.BoxGeometry(0.1, 0.1, 3),
-        new THREE.MeshBasicMaterial({
-            color: 0xFF0000,
-            transparent: true,
-            blending: THREE.AdditiveBlending
-        })
-    ));
-
-    projectile.add(new THREE.Mesh(
-        new THREE.BoxGeometry(0.05, 0.05, 2.95),
-        new THREE.MeshBasicMaterial({
-            color: 0xFFFFF
-        })
-    ));
+    var projectile = createProjectile();
 
     var leftTurretLight = new THREE.PointLight(0xFF0000, 2, 3);
     leftTurretLight.position.x = -1000;
@@ -67,15 +51,29 @@ define(function(require){
     var projectileSpeed = 50;
 
     var timer = new Timer(),
-        abberation = 0,
-        flash = 0;
+        stage2Timer = new Timer(),
+        aberration = 0,
+        flash = 0,
+        stage = 0;
+
     function render(time) {
         var passed = timer.getPassed(time);
-        ship.rotation.y -= 0.22 * passed;
-        starField.rotation.z += 0.05 * passed;
-        starField.rotation.y += 0.1 * passed;
-        camera.position.y += passed * 0.5;
-        camera.position.z += passed;
+
+        if(stage == 0){
+            ship.rotation.y -= 0.22 * passed;
+            starField.rotation.z += 0.05 * passed;
+            starField.rotation.y += 0.1 * passed;
+            camera.position.y += passed * 0.5;
+            camera.position.z += passed;
+        }
+
+        if(stage == 1){
+            var passedS1 = stage2Timer.getPassed(time);
+            camera.position.set(-5, 5, 8);
+            console.log(passedS1);
+            ship.rotation.y = (Math.PI / 2) + stage2Timer.getTime(time) * 0.01;
+        }
+
         projectiles = _.filter(projectiles, function(projectile){
             projectile.position.z -= passed * projectileSpeed;
             if(projectile.position.z < -300){
@@ -85,8 +83,8 @@ define(function(require){
             return true;
         });
 
-        effectPass.uniforms.aberration.value = 0.002 * abberation;
-        abberation = Math.max(0, abberation - 0.1);
+        effectPass.uniforms.aberration.value = 0.002 * aberration;
+        aberration = Math.max(0, aberration - 0.1);
 
         effectPass.uniforms.brightness.value = 0.3 * flash;
         flash = Math.max(0, flash - 0.1);
@@ -105,10 +103,15 @@ define(function(require){
             else
                 rightTurretLight.position = p.position;
             useLeftTurret = !useLeftTurret;
-            abberation = 1;
+            aberration = 1;
             if(event.note == 'D-3') {
                 flash = 1;
             }
+        }
+
+        if(event.pattern == 20){
+            stage = 1;
+            flash = 2;
         }
     }
 
@@ -118,4 +121,23 @@ define(function(require){
         render: render,
         onEvent: onEvent
     };
+
+    function createProjectile() {
+        var projectile = new THREE.Object3D();
+        projectile.add(new THREE.Mesh(
+            new THREE.BoxGeometry(0.1, 0.1, 3),
+            new THREE.MeshBasicMaterial({
+                color: 0xFF0000,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            })
+        ));
+        projectile.add(new THREE.Mesh(
+            new THREE.BoxGeometry(0.05, 0.05, 2.95),
+            new THREE.MeshBasicMaterial({
+                color: 0xFFFFF
+            })
+        ));
+        return projectile;
+    }
 });

@@ -1,9 +1,8 @@
 define(function(require){
     var Timer = require("Timer");
-    var Ease = require("Ease");
+    var Ease = require("ease");
     var scene = new THREE.Object3D();
     var camera = new THREE.PerspectiveCamera(75, 16 / 9, 0.1, 10000);
-
 
     var layers = _.map(["FU1.jpg", "FU2.png", "FU3.png", "FU4.png", "FU5.png", "FU6.png"], function(fileName){
         return new THREE.Mesh(
@@ -16,7 +15,6 @@ define(function(require){
     });
     layers[2].position.y = -10;
 
-
     var height = 0;
     var screen = _.reduce(layers, function(obj, layer){
         obj.add(layer);
@@ -24,7 +22,6 @@ define(function(require){
         height += 0.01;
         return obj;
     }, new THREE.Object3D());
-
 
     scene.add(screen);
 
@@ -43,7 +40,6 @@ define(function(require){
             layers[0].scale.addScalar(-passed * 0.001);
             layers[3].position.x += passed * 0.1;
             layers[4].position.x -= passed * 0.1;
-
 
             if (timer.getTime(time) > 1.5) {
                 layers[2].position.y = Ease.outCubic(Math.min(1, fingerPos += passed * 0.8)) * 10 - 10;

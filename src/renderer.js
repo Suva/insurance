@@ -3,7 +3,6 @@ define(function(require){
     var TimeLine = null;
 
     var renderer = new THREE.WebGLRenderer( {antialias: false, alpha:true} );
-    renderer.shadowMapEnabled = true;
 
     var renderModel = new THREE.RenderPass();
 

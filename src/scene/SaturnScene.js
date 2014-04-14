@@ -15,12 +15,13 @@ define(function(require){
     var camLight = new THREE.PointLight(0xFFFFFF, 1, 50)
     scene.add(camLight);
 
-    new THREE.JSONLoader().load("models/saturn.js", function(geometry, materials){
+    new THREE.JSONLoader().load("models/saturn2.js", function(geometry, materials){
+        materials[1].side = THREE.DoubleSide;
         var saturn = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+        saturn.rotation.y = -Math.PI / 2;
+        saturn.rotation.z = -0.2;
         saturn.scale.set(50, 50, 50);
         saturn.position.set(400, 0, -300);
-        saturn.castShadow = true;
-        saturn.receiveShadow = true;
         scene.add(saturn);
     });
 
@@ -231,12 +232,6 @@ define(function(require){
 
     function createLight() {
         var light = new THREE.DirectionalLight(0xFFFFFF, 2, 1000);
-        light.castShadow = true;
-        light.shadowBias = 0.001;
-        light.shadowDarkness = 1;
-        light.shadowMapWidth = 2048;
-        light.shadowMapHeight = 2048;
-
         light.position.set(-80, 20, 0);
 
         return light;

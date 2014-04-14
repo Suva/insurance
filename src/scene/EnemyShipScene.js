@@ -70,12 +70,10 @@ define(function(require){
         if(stage == 1){
             var passedS1 = stage2Timer.getPassed(time);
             camera.position.set(-5, 5 - stage2Timer.getTime(time) * 0.5, 8);
-            console.log(passedS1);
             starField.rotation.z += 0.05 * passedS1;
             starField.rotation.y -= 0.1 * passedS1;
             ship.rotation.y = (Math.PI / 2) + stage2Timer.getTime(time) * 0.15;
             camera.lookAt(ship.position);
-
         }
 
         projectiles = _.filter(projectiles, function(projectile){

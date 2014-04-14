@@ -6,6 +6,7 @@ define(function(require) {
     var MilkyWayScene  = require("scene/MilkyWayScene");
     var EnemyShipScene = require("scene/EnemyShipScene");
     var PirateScene    = require("scene/PirateScene");
+    var FuckOffScene   = require("scene/FuckOffScene");
     var ShatterScene   = require("scene/ShatterScene");
 
     var renderScene;
@@ -25,7 +26,8 @@ define(function(require) {
         WarpScene,
         EnemyShipScene,
         PirateScene,
-        ShatterScene
+        ShatterScene,
+        FuckOffScene
     ];
 
     var allScenes = stage1Scenes;
@@ -88,7 +90,7 @@ define(function(require) {
                     currentScene = PirateScene;
                     break;
                 case 19:
-                    currentScene = EnemyShipScene;
+                    currentScene = FuckOffScene;
                     break;
                 case 20:
                     currentScene = EnemyShipScene;

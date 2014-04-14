@@ -8,10 +8,39 @@ define(function(require){
     var origin = new THREE.Vector3();
     var starField = StarSystem.create(33, 100);
 
+    var leftTurretPosition = new THREE.Vector3(3.195, -0.2, -2);
+    var rightTurretPosition = new THREE.Vector3(-3.195, -0.2, -2);
+
     scene.add(starField);
 
     camera.position.set(-5, 5, 8);
     camera.lookAt(origin);
+
+    var projectiles = [];
+
+    var projectile = new THREE.Object3D();
+
+    projectile.add(new THREE.Mesh(
+        new THREE.BoxGeometry(0.1, 0.1, 3),
+        new THREE.MeshBasicMaterial({
+            color: 0xFF0000,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        })
+    ));
+
+    projectile.add(new THREE.Mesh(
+        new THREE.BoxGeometry(0.05, 0.05, 2.95),
+        new THREE.MeshBasicMaterial({
+            color: 0xFFFFF
+        })
+    ));
+
+    var leftTurretLight = new THREE.PointLight(0xFF0000, 2, 3);
+    leftTurretLight.position.x = -1000;
+
+    var rightTurretLight = leftTurretLight.clone();
+    rightTurretLight.position.x = -1000;
 
     var ship;
     loader.load("models/spaceship-five.js", function(geometry, materials){
@@ -26,13 +55,20 @@ define(function(require){
         ship.rotation.y = -1.5;
 
         scene.add(ship);
+
+        ship.add(leftTurretLight);
+        ship.add(rightTurretLight);
     });
 
     var light = new THREE.PointLight(0xFFFFFF, 1, 100);
     light.position.set(10, 10, 10);
     scene.add(light);
 
-    var timer = new Timer();
+    var projectileSpeed = 50;
+
+    var timer = new Timer(),
+        abberation = 0,
+        flash = 0;
     function render(time) {
         var passed = timer.getPassed(time);
         ship.rotation.y -= 0.22 * passed;
@@ -40,11 +76,46 @@ define(function(require){
         starField.rotation.y += 0.1 * passed;
         camera.position.y += passed * 0.5;
         camera.position.z += passed;
+        projectiles = _.filter(projectiles, function(projectile){
+            projectile.position.z -= passed * projectileSpeed;
+            if(projectile.position.z < -300){
+                ship.remove(projectile);
+                return false;
+            }
+            return true;
+        });
+
+        effectPass.uniforms.aberration.value = 0.002 * abberation;
+        abberation = Math.max(0, abberation - 0.1);
+
+        effectPass.uniforms.brightness.value = 0.3 * flash;
+        flash = Math.max(0, flash - 0.1);
+    }
+
+    var useLeftTurret = true;
+    function onEvent(event) {
+        if(event.instrument == 1 && (event.note == 'D-3' || event.note == 'C-3')){
+            var p = projectile.clone();
+
+            p.position = useLeftTurret ? leftTurretPosition.clone() : rightTurretPosition.clone();
+            projectiles.push(p);
+            ship.add(p);
+            if(useLeftTurret)
+                leftTurretLight.position = p.position;
+            else
+                rightTurretLight.position = p.position;
+            useLeftTurret = !useLeftTurret;
+            abberation = 1;
+            if(event.note == 'D-3') {
+                flash = 1;
+            }
+        }
     }
 
     return {
         scene: scene,
         camera: camera,
-        render: render
+        render: render,
+        onEvent: onEvent
     };
 });

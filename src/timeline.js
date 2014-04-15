@@ -96,6 +96,9 @@ define(function(require) {
                     currentScene = EnemyShipScene;
                     break;
                 case 23:
+                    currentScene = ShatterScene;
+                    break;
+                case 24:
                     currentScene = EnemyHitScene;
                     break;
             }

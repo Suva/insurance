@@ -13,7 +13,7 @@ define(function(require){
     var fractures = [];
 
     var fractureMaterials = _.map([
-        "01", "02", "03", "04"
+        "01", "02", "03", "04", "05", "06", "07", "08"
     ], function(nr) {
         return new THREE.MeshBasicMaterial({
             map: THREE.ImageUtils.loadTexture("images/greets/greets-"+nr+".png"),
@@ -83,11 +83,18 @@ define(function(require){
                     scene.add(p);
                 } else {
                     curMaterial++;
-                    if(fractureMaterials.length > curMaterial)
+                    if(fractureMaterials.length > curMaterial){
                         fractured = createFracturePlane();
+                        if(curMaterial == 4) {
+                            fractured.traverse(function(obj){ obj.visible = false; });
+                        }
+                    }
                 }
 
                 triggerProjectile = !triggerProjectile;
+            }
+            if(event.pattern == 23){
+                fractured.traverse(function(obj){ obj.visible = true; });
             }
         }
     };

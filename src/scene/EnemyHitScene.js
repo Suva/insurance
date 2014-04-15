@@ -11,6 +11,26 @@ define(function(require){
 
     scene.add(starField);
 
+    function createParticleSystem() {
+        var particleGeo = _.reduce(_.range(0, 100), function (geo) {
+            geo.vertices.push(new THREE.Vector3(0, 0, 0));
+            return geo;
+        }, new THREE.Geometry());
+        var particleSystem = new THREE.ParticleSystem(
+            particleGeo,
+            new THREE.ParticleSystemMaterial({color: 0xFFFFFF})
+        );
+        return particleSystem;
+    }
+
+
+    var particleSystems = _.map(_.range(0, 10), function(){
+        var ps = createParticleSystem();
+        scene.add(ps);
+        return ps;
+    });
+
+    var currentSystem = 0;
 
     camera.position.set(0,5,10);
     camera.lookAt(new THREE.Vector3());
@@ -19,9 +39,15 @@ define(function(require){
     light.position.set(30, 30, 30);
     scene.add(light);
 
-    var spaceship;
-    new THREE.JSONLoader().load("models/spaceship-seven.js", function(geometry, materials){
-        spaceship = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+    var spaceship, shield;
+    var jsonLoader = new THREE.JSONLoader();
+    jsonLoader.load("models/spaceship-seven.js", function(geometry, materials){
+        spaceship = new THREE.Object3D();
+        spaceship.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials)));
+        jsonLoader.load("models/spaceship-shield.js", function(geometry, materials){
+            shield = new THREE.Mesh(geometry, materials[0]);
+            spaceship.add(shield);
+        });
         spaceship.rotation.y = -Math.PI / 2 + 0.1;
         scene.add(spaceship);
     });
@@ -37,16 +63,53 @@ define(function(require){
             spaceship.rotation.y += passed * 0.1;
             camera.position.x += passed;
             camera.lookAt(spaceship.position);
-            _.each(projectiles, function(projectile){
+            projectiles = _.filter(projectiles, function(projectile){
                 projectile.position.set(
                     calculateProjectilePosition(projectile.position.x, passed),
                     calculateProjectilePosition(projectile.position.y, passed),
                     calculateProjectilePosition(projectile.position.z, passed)
-                )
-            })
+                );
+                if(projectile.position.distanceTo(spaceship.position) < 3){
+                    shield.material.opacity = 1;
+
+                    var particleSystem = particleSystems[currentSystem];
+                    particleSystem.active = true;
+                    particleSystem.position = _.clone(projectile.position)
+                    currentSystem = (currentSystem + 1) % particleSystems.length;
+
+                    _.each(particleSystem.geometry.vertices, function(vert){
+                        vert.set(0, 0, 0);
+                        vert.direction = particleSystem.position.clone()
+                            .add(new THREE.Vector3(
+                                    (Math.random() - 0.5) * 3,
+                                    (Math.random() - 0.5) * 3,
+                                    (Math.random() - 0.5) * 3
+                                )
+                            )
+                            .multiplyScalar(0.1);
+                    });
+
+
+                    scene.remove(projectile);
+                    return false;
+                }
+                return true;
+            });
+
+            shield.material.opacity = Math.max(0, shield.material.opacity - passed * 2);
+
+            _.each(particleSystems, function(ps){
+                if(ps.active) {
+                    _.each(ps.geometry.vertices, function(vert){
+                        vert.add(vert.direction);
+
+                    });
+                    ps.geometry.verticesNeedUpdate = true;
+                }
+            });
         },
         onEvent: function(event){
-            if(event.instrument == 1 && event.note == 'C-3'){
+            if(event.instrument == 1){
                 var projectile = createProjectile();
                 switch (Math.floor(Math.random() * 3)){
                     case 0:

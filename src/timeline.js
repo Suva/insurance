@@ -9,6 +9,8 @@ define(function(require) {
     var FuckOffScene   = require("scene/FuckOffScene");
     var ShatterScene   = require("scene/ShatterScene");
     var EnemyHitScene  = require("scene/EnemyHitScene");
+    var MonitorScene   = require("scene/MonitorScene");
+
 
     var renderScene, render2Scene, render3Scene;
 
@@ -26,7 +28,8 @@ define(function(require) {
         PirateScene,
         ShatterScene,
         FuckOffScene,
-        EnemyHitScene
+        EnemyHitScene,
+        MonitorScene
     ];
 
     function initRenderScene(scenes){
@@ -100,6 +103,9 @@ define(function(require) {
                     break;
                 case 24:
                     currentScene = EnemyHitScene;
+                    break;
+                case 25:
+                    currentScene = MonitorScene;
                     break;
             }
             renderScene = renderScenes[getSceneId(currentScene)];

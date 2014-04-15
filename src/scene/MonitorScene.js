@@ -6,13 +6,25 @@ define(function(require) {
 
     var loader = new THREE.JSONLoader();
     var monitor, lookPoint;
+    var monitorMaterial;
+
+    var screenTextures = _.map(_.range(0, 5), function(nr){
+        return THREE.ImageUtils.loadTexture("images/screens/screen-"+(nr + 1)+".jpg");
+    });
+    var curTexture = 0;
 
     loader.load("models/monitor.js", function (geometry, materials) {
+        monitorMaterial = materials[3];
+        monitorMaterial.color.setRGB(1, 1, 1);
         monitor = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
         scene.add(monitor);
         lookPoint = monitor.position.clone();
         lookPoint.x += .2;
+        monitorMaterial.map = screenTextures[0];
+        console.log(monitorMaterial);
     });
+
+
 
     camera.position.set(0, 0, 3);
     camera.lookAt(new THREE.Vector3());
@@ -31,6 +43,9 @@ define(function(require) {
 
     var timer = new Timer();
 
+    var aberration = 0;
+    var flash = 0;
+    var changePicture = true;
     return {
         scene: scene,
         camera: camera,
@@ -55,6 +70,28 @@ define(function(require) {
 
             light1.position.x -= passed * 2;
             light2.position.x += passed * 2;
+
+            var factor = Math.random() * 0.2;
+            monitorMaterial.color.setRGB(1 + factor, 1 + factor, 1 + factor);
+
+            effectPass.uniforms.aberration.value = 0.002 * aberration;
+            aberration = Math.max(0, aberration - 0.1);
+
+            effectPass.uniforms.brightness.value = 0.3 * flash;
+            flash = Math.max(0, flash - 0.1);
+
+        },
+        onEvent: function(event){
+            if(event.instrument == 1 && event.note == 'D-3'){
+                if(changePicture)
+                    monitorMaterial.map = screenTextures[++curTexture];
+                changePicture = !changePicture;
+                flash = 1;
+            }
+
+            if(event.instrument == 1 && event.note == 'C-3'){
+                aberration = 1;
+            }
         }
 
     }

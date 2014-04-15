@@ -107,6 +107,12 @@ define(function(require) {
                 case 25:
                     currentScene = MonitorScene;
                     break;
+                case 26:
+                    currentScene = EnemyHitScene;
+                    break;
+                case 27:
+                    currentScene = MonitorScene;
+
             }
             renderScene = renderScenes[getSceneId(currentScene)];
 

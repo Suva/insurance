@@ -47,12 +47,17 @@ define(function(require){
     light.position.set(30, 30, 30);
     scene.add(light);
 
+    var missileTailLight = new THREE.PointLight(0xaaaaFF, 15, 3);
+    missileTailLight.position.set(10000, 0, 0);
+    scene.add(missileTailLight);
+
     var spaceship, shield;
     var jsonLoader = new THREE.JSONLoader();
     jsonLoader.load("models/spaceship-seven.js", function(geometry, materials){
         spaceship = new THREE.Object3D();
         spaceship.add(new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials)));
         jsonLoader.load("models/spaceship-shield.js", function(geometry, materials){
+            materials[0].color.setRGB(1, 1, 3);
             shield = new THREE.Mesh(geometry, materials[0]);
             spaceship.add(shield);
         });
@@ -60,19 +65,49 @@ define(function(require){
         scene.add(spaceship);
     });
 
+    var missiles = [];
+    var curMissile = 0;
+
+    jsonLoader.load("models/missile.js", function(geometry, materials) {
+        var missile = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+
+        missile.rotation.y = Math.PI;
+        missile.position.y = -0.83;
+        missile.scale.multiplyScalar(0.1);
+
+        missiles.push(missile);
+        missiles.push(missile.clone());
+        missiles.push(missile.clone());
+
+        _.each(missiles, function(missile){
+            scene.add(missile);
+        })
+
+    });
+
+
     var projectileSpeed = 120;
+    var missileSpeed = 20;
     var timer = new Timer();
     var aberration = 0;
     var flash = 0;
+    var phase = 0;
 
     return {
         scene: scene,
         camera: camera,
         render: function(time){
             var passed = timer.getPassed(time);
-            spaceship.rotation.y += passed * 0.1;
-            camera.position.x += passed;
-            camera.lookAt(spaceship.position);
+
+            if(phase < 2){
+                spaceship.rotation.y += passed * 0.1;
+                camera.position.x += passed;
+                camera.lookAt(spaceship.position);
+            } else  {
+                camera.position.x += passed;
+                camera.lookAt(spaceship.position);
+            }
+
             projectiles = _.filter(projectiles, function(projectile){
                 projectile.position.set(
                     calculateProjectilePosition(projectile.position.x, passed),
@@ -107,6 +142,17 @@ define(function(require){
                 return true;
             });
 
+            _.each(missiles, function(missile){
+                if(missile.active){
+                    missile.position.z += passed * missileSpeed;
+                    missileTailLight.position.set(
+                        missile.position.x,
+                        missile.position.y,
+                        missile.position.z - 1.28
+                    );
+                }
+            });
+
             shield.material.opacity = Math.max(0, shield.material.opacity - passed * 2);
             effectPass.uniforms.aberration.value = 0.002 * aberration;
             aberration = Math.max(0, aberration - 0.1);
@@ -127,25 +173,51 @@ define(function(require){
         },
         onEvent: function(event){
             if(event.instrument == 1 && (event.note == 'C-3')){
-                var projectile = createProjectile();
-                switch (Math.floor(Math.random() * 3)){
-                    case 0:
-                        projectile.position.set(0, 0, 100);
-                        break;
-                    case 1:
-                        projectile.rotation.y = Math.PI / 2;
-                        projectile.position.set(-100, 0, 0);
-                        break;
-                    case 2:
-                        projectile.rotation.y = Math.PI / 2;
-                        projectile.position.set(100, 0, 0);
-                        break;
+                if(phase == 1 || curMissile == 3) {
+                    var projectile = createProjectile();
+                    switch (Math.floor(Math.random() * 3)){
+                        case 0:
+                            projectile.position.set(0, 0, 100);
+                            break;
+                        case 1:
+                            projectile.rotation.y = Math.PI / 2;
+                            projectile.position.set(-100, 0, 0);
+                            break;
+                        case 2:
+                            projectile.rotation.y = Math.PI / 2;
+                            projectile.position.set(100, 0, 0);
+                            break;
+                    }
+                    projectiles.push(projectile);
+                    scene.add(projectile);
                 }
-                projectiles.push(projectile);
-                scene.add(projectile);
             }
-            if(event.instrument == 1 && (event.note == 'C-3' || event.note == 'C-3')){
+            if(event.instrument == 1 && (event.note == 'C-3' || event.note == 'D-3')){
                 aberration = 1;
+
+                if(phase == 2 && curMissile < missiles.length && event.note == 'D-3'){
+                    var missile = missiles[curMissile++];
+                    aberration = 3;
+                    flash = 0.2;
+                    missile.traverse(function(obj){ obj.visible = true; });
+                    missile.active = true;
+                }
+
+            }
+        },
+        init: function(){
+            _.each(missiles, function(missile) { missile.visible = false; });
+
+            phase++;
+            if(phase == 2){
+                timer = new Timer();
+                projectiles = _.filter(projectiles, function(projectile){
+                    scene.remove(projectile);
+                    return false;
+                });
+                camera.position.set(3,-3,10);
+                camera.lookAt(new THREE.Vector3());
+                spaceship.rotation.y = -Math.PI / 2;
             }
         }
     };

@@ -1,5 +1,6 @@
 define(function(require){
-    var scene = require("scene/EnemyHitScene");
+    var scene = require("scene/MonitorScene");
+    var Timer = require("Timer");
 
     var renderScene = new THREE.Scene();
     var renderer = null;

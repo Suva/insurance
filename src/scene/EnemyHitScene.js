@@ -14,20 +14,20 @@ define(function(require){
     var sparkTexture = THREE.ImageUtils.loadTexture("images/spark.png");
 
     function createParticleSystem() {
+        var particleMat = new THREE.ParticleSystemMaterial({
+            color: 0xFFFFFF,
+            size: 0.3,
+            map: sparkTexture,
+            transparent: true,
+            depthWrite: false
+        });
+        particleMat.color.setRGB(3, 3, 3);
+
         var particleGeo = _.reduce(_.range(0, 300), function (geo) {
             geo.vertices.push(new THREE.Vector3(0, 0, 0));
             return geo;
         }, new THREE.Geometry());
-        var particleSystem = new THREE.ParticleSystem(
-            particleGeo,
-            new THREE.ParticleSystemMaterial({
-                color: 0xFFFFFF,
-                size: 0.3,
-                map: sparkTexture,
-                transparent: true,
-                depthWrite: false
-            })
-        );
+        var particleSystem = new THREE.ParticleSystem(particleGeo, particleMat);
         particleSystem.sortParticles = true;
         return particleSystem;
     }
@@ -133,7 +133,8 @@ define(function(require){
                                     (Math.random() - 0.5) * 3
                                 )
                             )
-                            .multiplyScalar(0.1);
+                            .normalize()
+                            .multiplyScalar(Math.random() * 0.3 + 0.3);
                     });
 
                     scene.remove(projectile);

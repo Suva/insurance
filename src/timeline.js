@@ -10,38 +10,29 @@ define(function(require) {
     var ShatterScene   = require("scene/ShatterScene");
     var EnemyHitScene  = require("scene/EnemyHitScene");
 
-    var renderScene;
+    var renderScene, render2Scene, render3Scene;
 
     var renderer = null;
 
     var currentScene = null;
 
-    var stage1Scenes = [
-        CargoRoomScene,
+    var allScenes = [
         SaturnScene,
+        CargoRoomScene,
         BridgeScene,
         MilkyWayScene,
-    ];
-
-    var stageTwoScenes = [
         WarpScene,
         EnemyShipScene,
         PirateScene,
         ShatterScene,
-        FuckOffScene
-    ];
-
-    var stageThreeScenes = [
+        FuckOffScene,
         EnemyHitScene
     ];
-
-    var allScenes = stage1Scenes;
 
     function initRenderScene(scenes){
         var renderTarget = new THREE.WebGLRenderTarget(16, 9);
         var renderCam = new THREE.PerspectiveCamera(80, 16 / 9, 0.1, 5000);
         var renderScene = new THREE.Scene();
-        allScenes = scenes;
 
         renderCam.position.set(0, 0, -1000);
         renderCam.lookAt(new THREE.Vector3());
@@ -84,8 +75,6 @@ define(function(require) {
                     currentScene = SaturnScene;
                     break;
                 case 8:
-                    oldScene = null;
-                    renderScene = initRenderScene(stageTwoScenes);
                     currentScene = WarpScene;
                     break;
                 case 17:
@@ -106,15 +95,13 @@ define(function(require) {
                 case 22:
                     currentScene = EnemyShipScene;
                     break;
+                case 23:
+                    currentScene = EnemyHitScene;
+                    break;
             }
+            renderScene = renderScenes[getSceneId(currentScene)];
 
             if(oldScene != currentScene){
-                _.each(oldScene ? [oldScene, currentScene] : allScenes, function(scene){
-                    var visibility = (scene == currentScene);
-                    scene.scene.traverse(function(obj) {
-                        obj.visible = visibility;
-                    })
-                });
                 if(currentScene.init){
                     currentScene.init({renderScene: renderScene, renderer: renderer});
                 }
@@ -123,7 +110,20 @@ define(function(require) {
         },
         setRenderer: function(r){
             renderer = r;
-            renderScene = initRenderScene(stage1Scenes);
+            renderScenes = _.map(allScenes, function(scene){
+                return initRenderScene([scene])
+            });
+            console.log(renderScene);
+
         }
+    }
+    function getSceneId(scene){
+        for(var i = 0; i < allScenes.length; i++){
+            if(allScenes[i] == scene){
+                console.log("Returning " + i);
+                return i;
+            }
+        }
+        return false;
     }
 });

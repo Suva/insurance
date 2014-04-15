@@ -32,7 +32,6 @@ define(function(require){
         return particleSystem;
     }
 
-
     var particleSystems = _.map(_.range(0, 10), function(){
         var ps = createParticleSystem();
         scene.add(ps);
@@ -63,6 +62,8 @@ define(function(require){
 
     var projectileSpeed = 120;
     var timer = new Timer();
+    var aberration = 0;
+    var flash = 0;
 
     return {
         scene: scene,
@@ -80,6 +81,7 @@ define(function(require){
                 );
                 if(projectile.position.distanceTo(spaceship.position) < 2){
                     shield.material.opacity = 1;
+                    flash = 1;
 
                     var particleSystem = particleSystems[currentSystem];
                     particleSystem.active = true;
@@ -99,7 +101,6 @@ define(function(require){
                             .multiplyScalar(0.1);
                     });
 
-
                     scene.remove(projectile);
                     return false;
                 }
@@ -107,6 +108,11 @@ define(function(require){
             });
 
             shield.material.opacity = Math.max(0, shield.material.opacity - passed * 2);
+            effectPass.uniforms.aberration.value = 0.002 * aberration;
+            aberration = Math.max(0, aberration - 0.1);
+
+            effectPass.uniforms.brightness.value = 0.3 * flash;
+            flash = Math.max(0, flash - 0.1);
 
             _.each(particleSystems, function(ps){
                 if(ps.active) {
@@ -137,6 +143,9 @@ define(function(require){
                 }
                 projectiles.push(projectile);
                 scene.add(projectile);
+            }
+            if(event.instrument == 1 && (event.note == 'C-3' || event.note == 'C-3')){
+                aberration = 1;
             }
         }
     };

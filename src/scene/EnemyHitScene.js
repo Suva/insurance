@@ -85,7 +85,6 @@ define(function(require){
 
     });
 
-
     var projectileSpeed = 120;
     var missileSpeed = 20;
     var timer = new Timer();

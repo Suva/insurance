@@ -50,8 +50,8 @@
 		"mapBumpWrap" : ["repeat", "repeat"],
 		"mapDiffuse" : "missile-texture.jpg",
 		"mapDiffuseWrap" : ["repeat", "repeat"],
-		"shading" : "Lambert",
-		"specularCoef" : 50,
+		"shading" : "Phong",
+		"specularCoef" : 5,
 		"transparency" : 1.0,
 		"transparent" : false,
 		"vertexColors" : false

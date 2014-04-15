@@ -24,7 +24,8 @@ define(function(require){
                 color: 0xFFFFFF,
                 size: 0.3,
                 map: sparkTexture,
-                transparent: true
+                transparent: true,
+                depthWrite: false
             })
         );
         particleSystem.sortParticles = true;

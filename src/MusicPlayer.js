@@ -6,7 +6,7 @@ define(function(require){
     sync = 0;
 
     loadStatus++;
-    var audio = new Audio("music/dnb7.6.mp3");
+    audio = new Audio("music/dnb7.6.mp3");
     audio.oncanplay = function(){loadStatus--};
     audio.load();
 

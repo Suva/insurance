@@ -8,6 +8,7 @@ define(function(require) {
     var PirateScene    = require("scene/PirateScene");
     var FuckOffScene   = require("scene/FuckOffScene");
     var ShatterScene   = require("scene/ShatterScene");
+    var EnemyHitScene  = require("scene/EnemyHitScene");
 
     var renderScene;
 
@@ -28,6 +29,10 @@ define(function(require) {
         PirateScene,
         ShatterScene,
         FuckOffScene
+    ];
+
+    var stageThreeScenes = [
+        EnemyHitScene
     ];
 
     var allScenes = stage1Scenes;

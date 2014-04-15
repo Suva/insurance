@@ -11,15 +11,23 @@ define(function(require){
 
     scene.add(starField);
 
+    var sparkTexture = THREE.ImageUtils.loadTexture("images/spark.png");
+
     function createParticleSystem() {
-        var particleGeo = _.reduce(_.range(0, 100), function (geo) {
+        var particleGeo = _.reduce(_.range(0, 300), function (geo) {
             geo.vertices.push(new THREE.Vector3(0, 0, 0));
             return geo;
         }, new THREE.Geometry());
         var particleSystem = new THREE.ParticleSystem(
             particleGeo,
-            new THREE.ParticleSystemMaterial({color: 0xFFFFFF})
+            new THREE.ParticleSystemMaterial({
+                color: 0xFFFFFF,
+                size: 0.3,
+                map: sparkTexture,
+                transparent: true
+            })
         );
+        particleSystem.sortParticles = true;
         return particleSystem;
     }
 
@@ -69,12 +77,13 @@ define(function(require){
                     calculateProjectilePosition(projectile.position.y, passed),
                     calculateProjectilePosition(projectile.position.z, passed)
                 );
-                if(projectile.position.distanceTo(spaceship.position) < 3){
+                if(projectile.position.distanceTo(spaceship.position) < 2){
                     shield.material.opacity = 1;
 
                     var particleSystem = particleSystems[currentSystem];
                     particleSystem.active = true;
                     particleSystem.position = _.clone(projectile.position)
+                    particleSystem.material.opacity = 1;
                     currentSystem = (currentSystem + 1) % particleSystems.length;
 
                     _.each(particleSystem.geometry.vertices, function(vert){
@@ -102,14 +111,15 @@ define(function(require){
                 if(ps.active) {
                     _.each(ps.geometry.vertices, function(vert){
                         vert.add(vert.direction);
-
                     });
                     ps.geometry.verticesNeedUpdate = true;
+                    ps.material.opacity = Math.max(0, ps.material.opacity - passed * 0.1);
+                    if(ps.material.opacity == 0){ ps.active = false; }
                 }
             });
         },
         onEvent: function(event){
-            if(event.instrument == 1){
+            if(event.instrument == 1 && (event.note == 'C-3')){
                 var projectile = createProjectile();
                 switch (Math.floor(Math.random() * 3)){
                     case 0:

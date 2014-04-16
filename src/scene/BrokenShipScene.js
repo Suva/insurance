@@ -8,8 +8,10 @@ define(function(require){
 
     var ship;
     jsonLoader.load("models/spaceship-seven-broken.js", function(geo, mat){
-        ship = new THREE.Mesh(geo, new THREE.MeshFaceMaterial(mat));
-        ship.position.x = 2;
+        ship = new THREE.Object3D();
+        var shipObjects = new THREE.Mesh(geo, new THREE.MeshFaceMaterial(mat));
+        shipObjects.position.x = -2;
+        ship.add(shipObjects);
         ship.rotation.y = Math.PI;
         scene.add(ship);
     });
@@ -22,6 +24,16 @@ define(function(require){
 
     scene.add(starField);
 
+    var plane = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+            map: THREE.ImageUtils.loadTexture("images/damages.png"),
+            transparent: true
+        })
+    );
+    plane.scale.multiplyScalar(10);
+
+    scene.add(plane);
+
     camera.position.set(-5, 5, 6);
     var center = new THREE.Vector3();
 
@@ -31,19 +43,24 @@ define(function(require){
         scene: scene,
         camera: camera,
         render: function(time){
+            effectPass.uniforms.brightness.value = Math.min(0, effectPass.uniforms.brightness.value + 0.01);
             var passed = timer.getPassed(time);
             var localTime = timer.getTime(time);
-            scene.rotation.y -= passed * 0.5 * factor;
-            light.position.z -= passed * 2 * factor;
+            ship.rotation.y -= passed * 0.5 * factor;
+            starField.rotation.y -= passed * 0.5 * factor;
+            light.position.z -= passed * 1 * factor;
             camera.position.y -= passed * 0.5 * factor;
             camera.lookAt(center);
             if(localTime > 9){
                factor = Math.max(0, (3 - (localTime - 9)) / 3);
             }
+            var brightness = (Math.sin(time * 8) + 1 / 2) + 0.9;
+            plane.material.color.setRGB(brightness, brightness, brightness);
         },
         init: function(){
             effectBloom.copyUniforms.opacity.value = 0.8;
-            effectPass.uniforms.aberration.value = 0;
+            effectPass.uniforms.aberration.value = 0.001;
+            effectPass.uniforms.brightness.value = -1;
         }
     };
 });

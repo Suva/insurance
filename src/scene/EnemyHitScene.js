@@ -103,7 +103,7 @@ define(function(require){
                 spaceship.rotation.y += passed * 0.1;
                 camera.position.x += passed;
                 camera.lookAt(spaceship.position);
-            } else  {
+            } else {
                 camera.position.x += passed;
                 camera.lookAt(spaceship.position);
                 spaceship.rotation.x += spaceship.moveVector.x;
@@ -112,8 +112,6 @@ define(function(require){
 
                 spaceship.moveVector.multiplyScalar(0.999);
             }
-
-
 
             projectiles = _.filter(projectiles, function(projectile){
                 projectile.position.set(
@@ -125,17 +123,16 @@ define(function(require){
                     if(phase == 1)
                         shield.material.opacity = 1;
 
-                    console.log(projectile.position);
-                    if(projectile.position.x < 0){
-                        spaceship.moveVector.y += 0.01
+                    if(phase == 2) {
+                        if(projectile.position.x < 0){
+                            spaceship.moveVector.y += 0.01
+                        }
+                        else if(projectile.position.x > 0){
+                            spaceship.moveVector.y -= 0.01
+                        } else {
+                            spaceship.moveVector.x += 0.01
+                        }
                     }
-                    else if(projectile.position.x > 0){
-                        spaceship.moveVector.y -= 0.01
-                    } else {
-                        spaceship.moveVector.x += 0.01
-                    }
-
-
 
                     if(phase == 2){
                         aberration = 2;

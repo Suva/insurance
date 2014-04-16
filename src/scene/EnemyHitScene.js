@@ -272,6 +272,4 @@ define(function(require){
         projectile.scale.multiplyScalar(0.8);
         return projectile;
     }
-
-
 });

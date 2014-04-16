@@ -15,6 +15,7 @@ define(function(require) {
     var BrokenShipScene         = require("scene/BrokenShipScene");
     var ShipExplosionScene      = require("scene/ShipExplosionScene");
     var SpaceControlScene       = require("scene/SpaceControlScene");
+    var HallwayScene            = require("scene/HallwayScene");
 
     var renderScene, render2Scene, render3Scene;
 
@@ -38,7 +39,8 @@ define(function(require) {
         EnemyShipExplosionScene,
         BrokenShipScene,
         ShipExplosionScene,
-        SpaceControlScene
+        SpaceControlScene,
+        HallwayScene
     ];
 
     function initRenderScene(scenes){
@@ -68,7 +70,6 @@ define(function(require) {
             };
         },
         onEvent: function(event){
-            var nextScene = null;
             if(typeof(event.pattern) == 'undefined') return;
             switch(event.pattern){
                 case 0:
@@ -135,6 +136,9 @@ define(function(require) {
                     currentScene = SpaceControlScene;
                     break;
                 case 37:
+                    currentScene = HallwayScene;
+                    break;
+                case 38:
                     currentScene = MonitorScene;
                     break;
             }

@@ -13,7 +13,7 @@ define(function(require) {
     var MissileScene            = require("scene/MissileScene");
     var EnemyShipExplosionScene = require("scene/EnemyShipExplosionScene");
     var BrokenShipScene         = require("scene/BrokenShipScene");
-
+    var ShipExplosionScene      = require("scene/ShipExplosionScene");
 
     var renderScene, render2Scene, render3Scene;
 
@@ -35,7 +35,8 @@ define(function(require) {
         MonitorScene,
         MissileScene,
         EnemyShipExplosionScene,
-        BrokenShipScene
+        BrokenShipScene,
+        ShipExplosionScene
     ];
 
     function initRenderScene(scenes){
@@ -126,7 +127,7 @@ define(function(require) {
                     currentScene = BrokenShipScene;
                     break;
                 case 31:
-                    currentScene = MonitorScene;
+                    currentScene = ShipExplosionScene;
                     break;
             }
             renderScene = renderScenes[getSceneId(currentScene)];

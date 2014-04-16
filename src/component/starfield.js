@@ -47,7 +47,4 @@ define(function(require){
         particleSystem.sortParticles = true;
         return  particleSystem;
     }
-
-
-
 });

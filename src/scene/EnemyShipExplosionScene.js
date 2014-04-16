@@ -1,0 +1,73 @@
+define(function(require){
+    var scene = new THREE.Object3D;
+    var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 5000);
+    var Timer = require("Timer");
+    var particleSpeed = 0.05;
+
+    var StarField = require("component/starfield");
+    scene.add(StarField.create(33));
+
+    var sparkTexture = THREE.ImageUtils.loadTexture("images/spark.png");
+
+    var particleSystem = createParticleSystem();
+    scene.add(particleSystem);
+
+    camera.position.set(0, 10, 30);
+    camera.lookAt(particleSystem.position);
+
+    var timer = new Timer();
+    var flash = 1;
+    return{
+        scene: scene,
+        camera: camera,
+        render: function(time){
+            var passed = timer.getPassed(time);
+            _.each(particleSystem.geometry.vertices, function(vert) {
+                vert.add(vert.direction);
+            });
+            effectPass.uniforms.brightness.value = -0.2 * flash;
+            flash = Math.max(0, flash - 0.1);
+            scene.rotation.y += passed * 0.1;
+            camera.position.z += passed;
+            camera.position.y += passed * 5;
+            camera.lookAt(particleSystem.position);
+            // particleSystem.material.opacity = Math.max(0, particleSystem.material.opacity - passed * 0.1);
+            particleSystem.material.size = Math.max(0, particleSystem.material.size - passed * 0.1);
+        },
+        init: function(){
+            effectBloom.copyUniforms.opacity.value = 3;
+        }
+
+    };
+
+    function createParticleSystem() {
+        var particleMat = new THREE.ParticleSystemMaterial({
+            color: 0xFFFFFF,
+            size: 0.8,
+            map: sparkTexture,
+            transparent: true,
+            depthWrite: false
+        });
+        particleMat.color.setRGB(3, 3, 3);
+
+        var particleGeo = _.reduce(_.range(0, 5000), function (geo, idx) {
+            var vertex = new THREE.Vector3();
+
+            if(idx < 2000){
+                vertex.direction = new THREE.Vector3(Math.random() - 0.5, 0, Math.random() - 0.5)
+                    .normalize()
+                    .multiplyScalar(particleSpeed * 4 + (Math.random() * 0.5));
+            } else {
+                vertex.direction = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5)
+                    .normalize()
+                    .multiplyScalar(particleSpeed + (Math.random() * 0.1));
+            }
+
+            geo.vertices.push(vertex);
+            return geo;
+        }, new THREE.Geometry());
+        var particleSystem = new THREE.ParticleSystem(particleGeo, particleMat);
+        particleSystem.sortParticles = true;
+        return particleSystem;
+    }
+});

@@ -1,16 +1,17 @@
 define(function(require) {
-    var CargoRoomScene = require("scene/CargoRoomScene");
-    var SaturnScene    = require("scene/SaturnScene");
-    var BridgeScene    = require("scene/BridgeScene");
-    var WarpScene      = require("scene/WarpScene");
-    var MilkyWayScene  = require("scene/MilkyWayScene");
-    var EnemyShipScene = require("scene/EnemyShipScene");
-    var PirateScene    = require("scene/PirateScene");
-    var FuckOffScene   = require("scene/FuckOffScene");
-    var ShatterScene   = require("scene/ShatterScene");
-    var EnemyHitScene  = require("scene/EnemyHitScene");
-    var MonitorScene   = require("scene/MonitorScene");
-    var MissileScene   = require("scene/MissileScene");
+    var CargoRoomScene          = require("scene/CargoRoomScene");
+    var SaturnScene             = require("scene/SaturnScene");
+    var BridgeScene             = require("scene/BridgeScene");
+    var WarpScene               = require("scene/WarpScene");
+    var MilkyWayScene           = require("scene/MilkyWayScene");
+    var EnemyShipScene          = require("scene/EnemyShipScene");
+    var PirateScene             = require("scene/PirateScene");
+    var FuckOffScene            = require("scene/FuckOffScene");
+    var ShatterScene            = require("scene/ShatterScene");
+    var EnemyHitScene           = require("scene/EnemyHitScene");
+    var MonitorScene            = require("scene/MonitorScene");
+    var MissileScene            = require("scene/MissileScene");
+    var EnemyShipExplosionScene = require("scene/EnemyShipExplosionScene");
 
 
     var renderScene, render2Scene, render3Scene;
@@ -31,7 +32,8 @@ define(function(require) {
         FuckOffScene,
         EnemyHitScene,
         MonitorScene,
-        MissileScene
+        MissileScene,
+        EnemyShipExplosionScene
     ];
 
     function initRenderScene(scenes){
@@ -116,7 +118,7 @@ define(function(require) {
                     currentScene = MissileScene;
                     break;
                 case 28:
-                    currentScene = EnemyShipScene;
+                    currentScene = EnemyShipExplosionScene;
                     break;
             }
             renderScene = renderScenes[getSceneId(currentScene)];

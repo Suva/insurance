@@ -46,6 +46,7 @@ define(function(require){
         },
         init: function(){
             effectBloom.copyUniforms.opacity.value = 3;
+            effectPass.uniforms.aberration.value = 0.001;
         }
 
     };

@@ -34,10 +34,9 @@ define(function(require){
             camera.position.z += passed;
             camera.position.y += passed * 5;
             camera.lookAt(particleSystem.position);
-            // particleSystem.material.opacity = Math.max(0, particleSystem.material.opacity - passed * 0.1);
             particleSystem.material.size = Math.max(0, particleSystem.material.size - passed * 0.3);
 
-            var colorPos = Math.min(1, timer.getTime(time) * 0.1);
+            var colorPos = Math.min(1, timer.getTime(time) * 0.14);
             particleSystem.material.color.setRGB(
                 Math.max(0, fromColor.r - colorPos) + Math.max(0, toColor.r - (1 - colorPos)),
                 Math.max(0, fromColor.g - colorPos) + Math.max(0, toColor.g - (1 - colorPos)),

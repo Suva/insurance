@@ -1,4 +1,7 @@
 define(function(require){
+    var fromColor = new THREE.Color(0xffb400);
+    var toColor = new THREE.Color(0x51c8ff);
+
     var scene = new THREE.Object3D;
     var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 5000);
     var Timer = require("Timer");
@@ -32,7 +35,15 @@ define(function(require){
             camera.position.y += passed * 5;
             camera.lookAt(particleSystem.position);
             // particleSystem.material.opacity = Math.max(0, particleSystem.material.opacity - passed * 0.1);
-            particleSystem.material.size = Math.max(0, particleSystem.material.size - passed * 0.1);
+            particleSystem.material.size = Math.max(0, particleSystem.material.size - passed * 0.3);
+
+            var colorPos = Math.min(1, timer.getTime(time) * 0.1);
+            particleSystem.material.color.setRGB(
+                Math.max(0, fromColor.r - colorPos) + Math.max(0, toColor.r - (1 - colorPos)),
+                Math.max(0, fromColor.g - colorPos) + Math.max(0, toColor.g - (1 - colorPos)),
+                Math.max(0, fromColor.b - colorPos) + Math.max(0, toColor.b - (1 - colorPos))
+            );
+
         },
         init: function(){
             effectBloom.copyUniforms.opacity.value = 3;
@@ -43,7 +54,7 @@ define(function(require){
     function createParticleSystem() {
         var particleMat = new THREE.ParticleSystemMaterial({
             color: 0xFFFFFF,
-            size: 0.8,
+            size: 2,
             map: sparkTexture,
             transparent: true,
             depthWrite: false

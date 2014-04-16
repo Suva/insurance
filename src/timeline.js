@@ -16,6 +16,7 @@ define(function(require) {
     var ShipExplosionScene      = require("scene/ShipExplosionScene");
     var SpaceControlScene       = require("scene/SpaceControlScene");
     var HallwayScene            = require("scene/HallwayScene");
+    var TeleporterScene         = require("scene/TeleporterScene");
 
     var renderScene, render2Scene, render3Scene;
 
@@ -40,7 +41,8 @@ define(function(require) {
         BrokenShipScene,
         ShipExplosionScene,
         SpaceControlScene,
-        HallwayScene
+        HallwayScene,
+        TeleporterScene
     ];
 
     function initRenderScene(scenes){
@@ -139,7 +141,7 @@ define(function(require) {
                     currentScene = HallwayScene;
                     break;
                 case 38:
-                    currentScene = MonitorScene;
+                    currentScene = TeleporterScene;
                     break;
             }
             renderScene = renderScenes[getSceneId(currentScene)];

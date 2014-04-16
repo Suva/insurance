@@ -63,6 +63,7 @@ define(function(require){
         });
         spaceship.rotation.y = -Math.PI / 2 + 0.1;
         scene.add(spaceship);
+        spaceship.moveVector = new THREE.Vector3();
     });
 
     var missiles = [];
@@ -105,7 +106,14 @@ define(function(require){
             } else  {
                 camera.position.x += passed;
                 camera.lookAt(spaceship.position);
+                spaceship.rotation.x += spaceship.moveVector.x;
+                spaceship.rotation.y += spaceship.moveVector.y;
+                spaceship.rotation.z += spaceship.moveVector.z;
+
+                spaceship.moveVector.multiplyScalar(0.999);
             }
+
+
 
             projectiles = _.filter(projectiles, function(projectile){
                 projectile.position.set(
@@ -114,8 +122,27 @@ define(function(require){
                     calculateProjectilePosition(projectile.position.z, passed)
                 );
                 if(projectile.position.distanceTo(spaceship.position) < 2){
-                    shield.material.opacity = 1;
-                    flash = 1;
+                    if(phase == 1)
+                        shield.material.opacity = 1;
+
+                    console.log(projectile.position);
+                    if(projectile.position.x < 0){
+                        spaceship.moveVector.y += 0.01
+                    }
+                    else if(projectile.position.x > 0){
+                        spaceship.moveVector.y -= 0.01
+                    } else {
+                        spaceship.moveVector.x += 0.01
+                    }
+
+
+
+                    if(phase == 2){
+                        aberration = 2;
+                        flash += 2.5;
+                    } else {
+                        flash = 1;
+                    }
 
                     var particleSystem = particleSystems[currentSystem];
                     particleSystem.active = true;

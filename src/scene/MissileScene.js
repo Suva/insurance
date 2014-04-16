@@ -7,7 +7,7 @@ define(function(require){
     var jsonLoader = new THREE.JSONLoader();
     var missile;
     var aberration = 0;
-    var flash = 1;
+    var flash = 4;
 
     jsonLoader.load("models/missile.js", function(geometry, materials) {
         missile = new THREE.Object3D;

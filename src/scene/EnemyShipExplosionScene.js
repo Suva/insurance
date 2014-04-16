@@ -1,6 +1,7 @@
 define(function(require){
     var fromColor = new THREE.Color(0xffb400);
     var toColor = new THREE.Color(0x51c8ff);
+    var Ease = require("ease");
 
     var scene = new THREE.Object3D;
     var camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 5000);
@@ -20,6 +21,7 @@ define(function(require){
 
     var timer = new Timer();
     var flash = 1;
+    var fadeOut = 0;
     return{
         scene: scene,
         camera: camera,
@@ -28,7 +30,6 @@ define(function(require){
             _.each(particleSystem.geometry.vertices, function(vert) {
                 vert.add(vert.direction);
             });
-            effectPass.uniforms.brightness.value = -0.2 * flash;
             flash = Math.max(0, flash - 0.1);
             scene.rotation.y += passed * 0.1;
             camera.position.z += passed;
@@ -42,6 +43,13 @@ define(function(require){
                 Math.max(0, fromColor.g - colorPos) + Math.max(0, toColor.g - (1 - colorPos)),
                 Math.max(0, fromColor.b - colorPos) + Math.max(0, toColor.b - (1 - colorPos))
             );
+
+            if(timer.getTime(time) > 4.5){
+                effectPass.uniforms.brightness.value = -0.2 * flash - Ease.outCubic(fadeOut);
+                fadeOut = Math.min(1, fadeOut + (passed * 0.15))
+            } else {
+                effectPass.uniforms.brightness.value = -0.2 * flash;
+            }
 
         },
         init: function(){

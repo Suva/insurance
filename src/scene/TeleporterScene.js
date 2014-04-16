@@ -15,6 +15,7 @@ define(function(require){
         scene.add(building);
     });
 
+    var origin = new THREE.Vector3(0, 4, 0);
     var startVector = new THREE.Vector3(0, 3, 20);
     var endVector = screenPosition.clone();
     endVector.z += 4.1;
@@ -22,7 +23,6 @@ define(function(require){
     endVector.x += 0.7;
 
     camera.position.set(0, 3, 20);
-    var lookAtVector = new THREE.Vector3(0, 3, 0);
 
     var light = new THREE.PointLight(0x00FF00, 0.8, 20);
     light.position.set(-10, 6, 12);
@@ -35,10 +35,34 @@ define(function(require){
     var light3 = new THREE.PointLight(0x6666FF, 0.4, 30);
     scene.add(light3);
 
+    var lightningTextures = _.map(_.range(0, 6), function(idx){
+        return THREE.ImageUtils.loadTexture("images/lightning/lightning-0"+(idx + 1)+".png");
+    });
+
+    var lightningPlanes = _.map(_.range(0, 100), function(){
+        var plane = new THREE.Mesh(
+            new THREE.PlaneGeometry(0.875, 7),
+            new THREE.MeshBasicMaterial({
+                map: lightningTextures[0],
+                transparent: true,
+                opacity: 0,
+                depthWrite: false
+            })
+        );
+        plane.position.set(Math.random() - 0.5, 0, Math.random() - 0.5);
+        plane.position.normalize();
+        plane.position.multiplyScalar(1.5);
+        plane.position.y = 3;
+        scene.add(plane);
+        return plane;
+    });
+
+
     var timer = new Timer();
     var hue = 0;
     var position = 0;
     var randomVector = new THREE.Vector3();
+    var phase = 0;
 
     return {
         scene: scene,
@@ -51,23 +75,47 @@ define(function(require){
             randomVector.y = Math.max(-0.3, Math.min(0.3, randomVector.y + (Math.random() - 0.5) * 0.001));
             randomVector.z = Math.max(-0.3, Math.min(0.3, randomVector.z + (Math.random() - 0.5) * 0.001));
 
-            var easedPosition = Ease.inOutCubic(position);
-            camera.position =
-                endVector.clone().multiplyScalar(easedPosition).add(
-                    startVector.clone().multiplyScalar(1 - easedPosition)
-                ).add(randomVector);
-
-            position = Math.min(1, position + passed * 0.3);
+            if(phase == 1){
+                var easedPosition = Ease.inOutCubic(position);
+                camera.position =
+                    endVector.clone().multiplyScalar(easedPosition).add(
+                        startVector.clone().multiplyScalar(1 - easedPosition)
+                    ).add(randomVector);
+                position = Math.min(1, position + passed * 0.3);
+            }
 
             light3.position = camera.position;
             light3.color.setHSL(hue, 1, 0.5);
             hue += passed * 0.1;
             if(hue > 1) hue = hue -1;
 
+            if(phase == 2){
+                _.each(lightningPlanes, function(plane){
+                    plane.material.opacity = Math.max(0, plane.material.opacity - passed * 2)
+                });
+                camera.lookAt(origin);
+                camera.position.x += passed;
+            }
+        },
+        onEvent: function(event) {
+            if(phase == 2){
+                if(event.instrument == 1){
+                   _.each(_.range(0, 10), function(){
+                       var mat = lightningPlanes[Math.floor(Math.random() * lightningPlanes.length)].material;
+                       console.log(mat);
+                       mat.map = lightningTextures[Math.floor(Math.random() * lightningTextures.length)];
+                       mat.opacity = 1;
+                   })
+               }
 
-
+            }
+            if(event.pattern == 40){
+                camera.position.set(-10, 3, 10)
+                phase++;
+            }
         },
         init: function(){
+            phase++;
             effectPass.uniforms.brightness.value = 0;
             effectPass.uniforms.aberration.value = 0;
         }

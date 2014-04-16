@@ -10,6 +10,7 @@ define(function(require) {
     var ShatterScene   = require("scene/ShatterScene");
     var EnemyHitScene  = require("scene/EnemyHitScene");
     var MonitorScene   = require("scene/MonitorScene");
+    var MissileScene   = require("scene/MissileScene");
 
 
     var renderScene, render2Scene, render3Scene;
@@ -29,7 +30,8 @@ define(function(require) {
         ShatterScene,
         FuckOffScene,
         EnemyHitScene,
-        MonitorScene
+        MonitorScene,
+        MissileScene
     ];
 
     function initRenderScene(scenes){
@@ -111,8 +113,11 @@ define(function(require) {
                     currentScene = EnemyHitScene;
                     break;
                 case 27:
-                    currentScene = MonitorScene;
-
+                    currentScene = MissileScene;
+                    break;
+                case 28:
+                    currentScene = EnemyShipScene;
+                    break;
             }
             renderScene = renderScenes[getSceneId(currentScene)];
 

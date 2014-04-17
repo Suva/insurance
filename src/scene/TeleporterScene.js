@@ -60,7 +60,7 @@ define(function(require){
         );
         plane.position.set(Math.random() - 0.5, 0, Math.random() - 0.5);
         plane.position.normalize();
-        plane.position.multiplyScalar(1.5);
+        plane.position.multiplyScalar(1.3);
         plane.position.y = 3;
         scene.add(plane);
         return plane;
@@ -107,11 +107,12 @@ define(function(require){
                 camera.lookAt(origin);
                 camera.position.x += passed * 0.5;
                 camera.position.z += passed * 0.1;
-                strobe.intensity -= passed * 8;
+                strobe.intensity -= passed * 9;
                 if(ultrastrobe.intensity == 0)
                     ultrastrobe.intensity = 0.5;
                 else
                     ultrastrobe.intensity = 0;
+                ultrastrobe.color.setHSL(Math.random(), 0.5, 0.5)
             }
             if(fadeInGirl){
                 girlPlaneMat.opacity += 0.1 * passed;

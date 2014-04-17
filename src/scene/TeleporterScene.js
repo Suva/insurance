@@ -9,13 +9,26 @@ define(function(require){
 
     var jsonLoader = new THREE.JSONLoader();
     var girlPlaneMat;
+    var screenMat;
     var building;
+
+
+    var screenTextures = _.map(_.range(0, 3), function(idx){
+        return THREE.ImageUtils.loadTexture("images/screens/screen-2-"+(idx +1)+".jpg");
+    });
+
     jsonLoader.load("models/teleporter.js", function(geometry, materials) {
         girlPlaneMat = materials[2];
         girlPlaneMat.opacity = 0;
+        screenMat = materials[0];
+        screenMat.color.setRGB(1, 1, 1);
+        screenMat.map = screenTextures[0];
+
+
         building = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
         scene.add(building);
     });
+
 
     var origin = new THREE.Vector3(0, 4, 0);
     var startVector = new THREE.Vector3(0, 3, 20);
@@ -68,6 +81,7 @@ define(function(require){
 
 
     var timer = new Timer();
+    var screen3Timer;
     var hue = 0;
     var position = 0;
     var randomVector = new THREE.Vector3();
@@ -99,6 +113,10 @@ define(function(require){
             light3.color.setHSL(hue, 1, 0.5);
             hue += passed * 0.1;
             if(hue > 1) hue = hue -1;
+
+            if(screen3Timer && screen3Timer.getTime(time) > 4.5){
+                screenMat.map = screenTextures[2];
+            }
 
             if(phase == 2){
                 _.each(lightningPlanes, function(plane){
@@ -134,10 +152,16 @@ define(function(require){
                }
 
             }
+            if(event.pattern == 39){
+                screenMat.map = screenTextures[1];
+                screen3Timer = new Timer();
+            }
             if(event.pattern == 40){
-                camera.position.set(-10, 3, 10)
+                camera.position.set(-10, 3, 10);
+                screenMat.map = screenTextures[0];
                 phase++;
             }
+
             if(event.pattern == 42){
                 fadeInGirl = true;
             }
@@ -148,6 +172,8 @@ define(function(require){
         },
         init: function(){
             phase++;
+            effectBloom.copyUniforms.opacity.value = 1.2;
+            screenMat.map = screenTextures[0];
             effectPass.uniforms.brightness.value = 0;
             effectPass.uniforms.aberration.value = 0;
         }

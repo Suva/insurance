@@ -47,7 +47,6 @@ define(function(require){
                 }
             }
 
-
         },
         init: function(){
             effectBloom.copyUniforms.opacity.value = 0.3;

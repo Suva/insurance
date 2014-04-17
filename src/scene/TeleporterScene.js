@@ -8,9 +8,11 @@ define(function(require){
     var Ease = require("ease");
 
     var jsonLoader = new THREE.JSONLoader();
+    var girlPlaneMat;
     var building;
     jsonLoader.load("models/teleporter.js", function(geometry, materials) {
-        materials[2].opacity = 0;
+        girlPlaneMat = materials[2];
+        girlPlaneMat.opacity = 0;
         building = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
         scene.add(building);
     });
@@ -34,6 +36,13 @@ define(function(require){
 
     var light3 = new THREE.PointLight(0x6666FF, 0.4, 30);
     scene.add(light3);
+
+    var strobe = new THREE.PointLight(0x6666FF, 0, 100);
+    strobe.position.set(0, 0, 30);
+    scene.add(strobe);
+
+    var ultrastrobe = new THREE.PointLight(0xFFFFFF, 0, 100);
+    scene.add(ultrastrobe);
 
     var lightningTextures = _.map(_.range(0, 6), function(idx){
         return THREE.ImageUtils.loadTexture("images/lightning/lightning-0"+(idx + 1)+".png");
@@ -63,6 +72,8 @@ define(function(require){
     var position = 0;
     var randomVector = new THREE.Vector3();
     var phase = 0;
+    var fadeInGirl = false;
+    var fadeToWhite = false;
 
     return {
         scene: scene,
@@ -94,7 +105,20 @@ define(function(require){
                     plane.material.opacity = Math.max(0, plane.material.opacity - passed * 2)
                 });
                 camera.lookAt(origin);
-                camera.position.x += passed;
+                camera.position.x += passed * 0.5;
+                camera.position.z += passed * 0.1;
+                strobe.intensity -= passed * 8;
+                if(ultrastrobe.intensity == 0)
+                    ultrastrobe.intensity = 0.5;
+                else
+                    ultrastrobe.intensity = 0;
+            }
+            if(fadeInGirl){
+                girlPlaneMat.opacity += 0.1 * passed;
+                if(girlPlaneMat.opacity >= 1) fadeInGirl = false;
+            }
+            if(fadeToWhite){
+                effectPass.uniforms.brightness.value += passed * 0.2;
             }
         },
         onEvent: function(event) {
@@ -102,16 +126,23 @@ define(function(require){
                 if(event.instrument == 1){
                    _.each(_.range(0, 10), function(){
                        var mat = lightningPlanes[Math.floor(Math.random() * lightningPlanes.length)].material;
-                       console.log(mat);
                        mat.map = lightningTextures[Math.floor(Math.random() * lightningTextures.length)];
                        mat.opacity = 1;
-                   })
+                   });
+                   strobe.intensity = 4;
                }
 
             }
             if(event.pattern == 40){
                 camera.position.set(-10, 3, 10)
                 phase++;
+            }
+            if(event.pattern == 42){
+                fadeInGirl = true;
+            }
+
+            if(event.pattern == 43){
+                fadeToWhite = true;
             }
         },
         init: function(){

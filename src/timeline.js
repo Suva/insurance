@@ -17,6 +17,7 @@ define(function(require) {
     var SpaceControlScene       = require("scene/SpaceControlScene");
     var HallwayScene            = require("scene/HallwayScene");
     var TeleporterScene         = require("scene/TeleporterScene");
+    var InsuranceScene          = require("scene/InsuranceScene");
 
     var renderScene, render2Scene, render3Scene;
 
@@ -42,7 +43,8 @@ define(function(require) {
         ShipExplosionScene,
         SpaceControlScene,
         HallwayScene,
-        TeleporterScene
+        TeleporterScene,
+        InsuranceScene
     ];
 
     function initRenderScene(scenes){
@@ -142,6 +144,9 @@ define(function(require) {
                     break;
                 case 38:
                     currentScene = TeleporterScene;
+                    break;
+                case 44:
+                    currentScene = InsuranceScene;
                     break;
             }
             renderScene = renderScenes[getSceneId(currentScene)];

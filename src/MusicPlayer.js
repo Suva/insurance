@@ -24,7 +24,7 @@ define(function(require){
         getEvents: function(){
             var maxTime = audio.currentTime - sync;
             var events = [];
-            while(songEvents[position][0] <= maxTime){
+            while(songEvents[position] && songEvents[position][0] <= maxTime){
                  events = events.concat(_.map(songEvents[position][1], function(event) {
                     var instrument = event[1];
                     var note = event[0];

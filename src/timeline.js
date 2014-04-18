@@ -163,14 +163,11 @@ define(function(require) {
             renderScenes = _.map(allScenes, function(scene){
                 return initRenderScene([scene])
             });
-            console.log(renderScene);
-
         }
     }
     function getSceneId(scene){
         for(var i = 0; i < allScenes.length; i++){
             if(allScenes[i] == scene){
-                console.log("Returning " + i);
                 return i;
             }
         }

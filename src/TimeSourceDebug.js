@@ -3,7 +3,6 @@ define(function(){
     var events = [];
 
     $(window).on("keydown", function(ev){
-        console.log(ev.keyCode);
         switch(ev.keyCode){
             case 90: // Z key
                 events.push({instrument: 1, note: 'C-3'}); // Kick

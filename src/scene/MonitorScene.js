@@ -21,7 +21,6 @@ define(function(require) {
         lookPoint = monitor.position.clone();
         lookPoint.x += .2;
         monitorMaterial.map = screenTextures[0];
-        console.log(monitorMaterial);
     });
 
 

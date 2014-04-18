@@ -11,7 +11,7 @@ define(function(require){
         scene.add(building);
     });
 
-    camera.position.set(0, 3, 20);
+    camera.position.set(0, 3, 16);
     var lookAtVector = new THREE.Vector3(0, 3, 0);
 
     var light = new THREE.PointLight(0xFFFFFF, 0.2, 20);
@@ -26,6 +26,7 @@ define(function(require){
     scene.add(light3);
 
     var timer = new Timer();
+    var lightTimer = new Timer();
     return {
         scene: scene,
         camera: camera,
@@ -34,6 +35,9 @@ define(function(require){
             camera.position.z -= passed * 2;
             camera.lookAt(lookAtVector);
             light3.position = camera.position;
+            if(timer.getTime(time) > 4.5){
+                effectPass.uniforms.brightness.value = lightTimer.getTime(time) / 2;
+            }
         },
         init: function(){
             effectPass.uniforms.brightness.value = 0;

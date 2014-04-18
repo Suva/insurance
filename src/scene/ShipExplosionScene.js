@@ -29,7 +29,7 @@ define(function(require) {
             transparent: true
         })
     );
-    // screen2.position.z = 0.001;
+    screen2.position.z = 0.001;
     scene.add(screen2);
 
     scene.add(screen);

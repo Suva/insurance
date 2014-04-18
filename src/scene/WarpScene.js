@@ -68,7 +68,6 @@ define(function(require){
         scene.add(fleet);
     });
 
-
     var starSystem = Starfield.create(33);
     scene.add(starSystem);
 
@@ -79,8 +78,41 @@ define(function(require){
     var randomColors = false;
     var lineTimer = new Timer();
     var textTimer = new Timer();
-    var showText = false;
-    var textString = "this warp field is brought to you by cybercat warp fields corporation    warp fields for every taste and need";
+    var showText = true;
+    var textString = [
+        "this warp field is brought to you by cybercat corporation",
+        "warp fields for every taste and need",
+        "just contact your nearest cybercat dealer for special offers",
+        "     ",
+        "code",
+        "music",
+        "modelling",
+        "by",
+        "c l y    s u v a",
+        "     ",
+        "concept art",
+        "graphics",
+        "v a s t i q u e",
+        "     ",
+        "no cats were harmed during the making of this demo",
+        "so are you enjoying this warp field",
+        "please provide feedback",
+        "our customer needs are most important to us",
+        "oh right",
+        "we detected a warp cancellation field approaching",
+        "looks like you are about to fall out of warp",
+        "sorry about that",
+        "you should have bought our warp cancellation field cancellation package"
+    ].join("     ");
+
+    _.each(textString, function(char, idx){
+        if(char != " "){
+            var charObj = Text.drawChar(char, scene, new THREE.Vector3(0, 0, -200 - (idx)));
+            charObj.scale.multiplyScalar(2);
+            chars.push(charObj);
+        }
+    })
+
     var oldCharPos = null;
     return {
         scene: scene,
@@ -89,27 +121,16 @@ define(function(require){
             var timePassed = lineTimer.getPassed(time);
 
             if(showText){
-                var charPos = Math.floor(textTimer.getTime(time) * 10);
-
-                if(charPos !== oldCharPos && charPos < textString.length){
-                    oldCharPos = charPos;
-                    var char = textString[charPos];
-                    console.log(char)
-                    if(char != " "){
-                        var charObj = Text.drawChar(char, scene, new THREE.Vector3(0, 0, -200));
-                        charObj.scale.multiplyScalar(2);
-                        chars.push(charObj);
-                    }
-                }
                 _.each(chars, function(char){
                     char.position.z += timePassed * 20;
                     char.position.x = Math.sin(char.position.z * 0.06 + 4) * 30;
                     char.position.y = Math.sin(char.position.z * 0.06) * 15;
-                    // char.material.opacity = Math.min(1, char.position.z / 200);
+                    char.material.opacity = Math.min(1, Math.max(0, (char.position.z + 200) / 100));
+                    if(char.position.z > 0){
+                        scene.remove(char);
+                    }
                 });
             }
-
-
 
             if(brightness > 0){
                 brightness = Math.max(0, brightness - timePassed);

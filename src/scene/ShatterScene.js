@@ -36,10 +36,11 @@ define(function(require){
         fractured = createFracturePlane();
     });
 
-
     var light = new THREE.PointLight(0xFFFFFF, 10, 100);
     light.position.set(10, 10, 10);
     scene.add(light);
+    var flash = 0;
+    var aberration = 0;
 
     var triggerProjectile = true;
     return {
@@ -60,6 +61,7 @@ define(function(require){
                 projectile.position.z -= 1;
                 if(projectile.position.z < 0 && projectile.active) {
                     projectile.active = false;
+                    flash = 1;
                     _.map(fractured.children, function(object){
                         fractures.push(object);
                         object.rotVector = new THREE.Vector3(
@@ -73,6 +75,11 @@ define(function(require){
                     });
                 }
             })
+            effectPass.uniforms.brightness.value = 0.3 * flash;
+            flash = Math.max(0, flash - 0.1);
+
+            effectPass.uniforms.aberration.value = 0.002 * aberration;
+            aberration = Math.max(0, aberration - 0.1);
         },
         onEvent: function(event){
             if(event.instrument == 1 && event.note == 'D-3'){
@@ -92,6 +99,9 @@ define(function(require){
                 }
 
                 triggerProjectile = !triggerProjectile;
+            }
+            if(event.instrument == 1 && event.note == 'C-3'){
+                aberration = 1;
             }
             if(event.pattern == 23){
                 fractured.traverse(function(obj){ obj.visible = true; });

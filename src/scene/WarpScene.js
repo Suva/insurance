@@ -1,9 +1,12 @@
 define(function(require){
     var Random = require("random");
     var Timer = require("Timer");
+    var Text = require("component/Text");
     var Ease = require("ease");
     var Starfield = require("component/starfield");
     var renderScene = null;
+
+    var chars = [];
 
     var scaling = 0;
     var rotSpeed = 0;
@@ -75,12 +78,38 @@ define(function(require){
 
     var randomColors = false;
     var lineTimer = new Timer();
+    var textTimer = new Timer();
+    var showText = false;
+    var textString = "this warp field is brought to you by cybercat warp fields corporation    warp fields for every taste and need";
+    var oldCharPos = null;
     return {
         scene: scene,
         camera: camera,
         render: function(time){
-
             var timePassed = lineTimer.getPassed(time);
+
+            if(showText){
+                var charPos = Math.floor(textTimer.getTime(time) * 10);
+
+                if(charPos !== oldCharPos && charPos < textString.length){
+                    oldCharPos = charPos;
+                    var char = textString[charPos];
+                    console.log(char)
+                    if(char != " "){
+                        var charObj = Text.drawChar(char, scene, new THREE.Vector3(0, 0, -200));
+                        charObj.scale.multiplyScalar(2);
+                        chars.push(charObj);
+                    }
+                }
+                _.each(chars, function(char){
+                    char.position.z += timePassed * 20;
+                    char.position.x = Math.sin(char.position.z * 0.06 + 4) * 30;
+                    char.position.y = Math.sin(char.position.z * 0.06) * 15;
+                    // char.material.opacity = Math.min(1, char.position.z / 200);
+                });
+            }
+
+
 
             if(brightness > 0){
                 brightness = Math.max(0, brightness - timePassed);
@@ -90,7 +119,7 @@ define(function(require){
             if(scaling > 0) {
                 scaling = Math.max(0, scaling - timePassed);
             }
-            var scale = 1 + Ease.inQuint( scaling ) * 10;
+            var scale = 1 + Ease.inQuint( scaling ) * 6;
             _.each(lineSystem.children, function(line){
                 line.position.z += timePassed * 200;
                 if(scaling > 0){
@@ -100,7 +129,7 @@ define(function(require){
                 if(respawnLines && line.position.z > 15) {
                     line.position.z -= 215;
                     if(randomColors){
-                        line.material.color.setHSL(Math.random(), 1, 5);
+                        line.material.color.setHSL(Math.random(), 1, 0.8);
                     }
                 }
             });
@@ -162,6 +191,9 @@ define(function(require){
                 if(brightness == 0 && respawnLines){
                     brightness = 0.5;
                     aberration = 0.01;
+                }
+                if(event.pattern == 10){
+                    showText = true;
                 }
                 if(event.pattern == 12){
                     randomColors = true;

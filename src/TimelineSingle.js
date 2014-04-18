@@ -1,5 +1,5 @@
 define(function(require){
-    var scene = require("scene/ShatterScene");
+    var scene = require("scene/TeleporterScene");
     var Timer = require("Timer");
 
     var renderScene = new THREE.Scene();

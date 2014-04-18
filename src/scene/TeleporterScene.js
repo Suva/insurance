@@ -24,7 +24,6 @@ define(function(require){
         screenMat.color.setRGB(1, 1, 1);
         screenMat.map = screenTextures[0];
 
-
         building = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
         scene.add(building);
     });
@@ -88,6 +87,9 @@ define(function(require){
     var phase = 0;
     var fadeInGirl = false;
     var fadeToWhite = false;
+    var flash = 3;
+    var aberration = 0;
+    var fadeLevel = 0;
 
     return {
         scene: scene,
@@ -101,7 +103,7 @@ define(function(require){
             randomVector.z = Math.max(-0.3, Math.min(0.3, randomVector.z + (Math.random() - 0.5) * 0.001));
 
             if(phase == 1){
-                var easedPosition = Ease.inOutCubic(position);
+                var easedPosition = Ease.outCubic(position);
                 camera.position =
                     endVector.clone().multiplyScalar(easedPosition).add(
                         startVector.clone().multiplyScalar(1 - easedPosition)
@@ -136,19 +138,34 @@ define(function(require){
                 girlPlaneMat.opacity += 0.1 * passed;
                 if(girlPlaneMat.opacity >= 1) fadeInGirl = false;
             }
+
+            effectPass.uniforms.brightness.value = 0.3 * flash;
+            flash = Math.max(0, flash - 0.1);
+
             if(fadeToWhite){
-                effectPass.uniforms.brightness.value += passed * 0.2;
+                effectPass.uniforms.brightness.value += fadeLevel;
+                fadeLevel += passed * 0.15;
             }
+
+            effectPass.uniforms.aberration.value = 0.002 * aberration;
+            aberration = Math.max(0, aberration - 0.1);
+
         },
         onEvent: function(event) {
+            if(event.instrument == 1 && event.note == "C-3"){
+                aberration = 1;
+            }
+            if(event.instrument == 1 && event.note == "D-3"){
+                flash = 1;
+            }
             if(phase == 2){
                 if(event.instrument == 1){
-                   _.each(_.range(0, 10), function(){
-                       var mat = lightningPlanes[Math.floor(Math.random() * lightningPlanes.length)].material;
-                       mat.map = lightningTextures[Math.floor(Math.random() * lightningTextures.length)];
-                       mat.opacity = 1;
-                   });
-                   strobe.intensity = 4;
+                    _.each(_.range(0, 10), function(){
+                        var mat = lightningPlanes[Math.floor(Math.random() * lightningPlanes.length)].material;
+                        mat.map = lightningTextures[Math.floor(Math.random() * lightningTextures.length)];
+                        mat.opacity = 1;
+                    });
+                    strobe.intensity = 4;
                }
 
             }

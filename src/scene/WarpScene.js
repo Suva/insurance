@@ -73,6 +73,7 @@ define(function(require){
     light.position = camera.position;
     scene.add(light);
 
+    var randomColors = false;
     var lineTimer = new Timer();
     return {
         scene: scene,
@@ -89,7 +90,7 @@ define(function(require){
             if(scaling > 0) {
                 scaling = Math.max(0, scaling - timePassed);
             }
-            var scale = 1 + Ease.inQuint( scaling ) * 5;
+            var scale = 1 + Ease.inQuint( scaling ) * 10;
             _.each(lineSystem.children, function(line){
                 line.position.z += timePassed * 200;
                 if(scaling > 0){
@@ -98,6 +99,9 @@ define(function(require){
 
                 if(respawnLines && line.position.z > 15) {
                     line.position.z -= 215;
+                    if(randomColors){
+                        line.material.color.setHSL(Math.random(), 1, 5);
+                    }
                 }
             });
 
@@ -158,6 +162,9 @@ define(function(require){
                 if(brightness == 0 && respawnLines){
                     brightness = 0.5;
                     aberration = 0.01;
+                }
+                if(event.pattern == 12){
+                    randomColors = true;
                 }
                 if(event.pattern == 16){
                     respawnLines = false;

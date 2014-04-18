@@ -27,6 +27,8 @@ define(function(require){
 
     var timer = new Timer();
     var lightTimer = new Timer();
+    var flash = 3;
+    var aberration = 0;
     return {
         scene: scene,
         camera: camera,
@@ -35,13 +37,29 @@ define(function(require){
             camera.position.z -= passed * 2;
             camera.lookAt(lookAtVector);
             light3.position = camera.position;
+
+            effectPass.uniforms.brightness.value = 0.3 * flash;
+            flash = Math.max(0, flash - 0.1);
+
             if(timer.getTime(time) > 4.5){
-                effectPass.uniforms.brightness.value = lightTimer.getTime(time) / 2;
+                effectPass.uniforms.brightness.value += lightTimer.getTime(time) / 2;
             }
+
+            effectPass.uniforms.aberration.value = 0.002 * aberration;
+            aberration = Math.max(0, aberration - 0.1);
+
         },
         init: function(){
             effectPass.uniforms.brightness.value = 0;
             effectPass.uniforms.aberration.value = 0;
+        },
+        onEvent: function(event){
+            if(event.instrument == 1 && event.note == "C-3"){
+                aberration = 1;
+            }
+            if(event.instrument == 1 && event.note == "D-3"){
+                flash = 1;
+            }
         }
     }
 

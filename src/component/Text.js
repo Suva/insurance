@@ -2,10 +2,7 @@ define(function(require){
     var Timer = require("Timer");
 
     var charTextures = _.map(_.range(1, 27), function(idx){
-        return new THREE.SpriteMaterial({
-            map: THREE.ImageUtils.loadTexture("images/alphabet/"+idx+".png"),
-            transparent: true
-        });
+        return THREE.ImageUtils.loadTexture("images/alphabet/"+idx+".png")
     });
 
     return {
@@ -13,11 +10,13 @@ define(function(require){
         drawString: drawString
     }
 
-
     function drawChar(char, scene, position){
         var charCode = char.charCodeAt(0) - 97;
         var obj = new THREE.Sprite(
-            charTextures[charCode]
+            new THREE.SpriteMaterial({
+                map: charTextures[charCode],
+                transparent: true
+            })
         );
 
         obj.position = position;
@@ -33,10 +32,12 @@ define(function(require){
         var charStep = 0.05;
         var renderedChar = null;
         var chars = [];
+        var fadeOut = false;
 
         return {
             render: function (time){
                 var t = timer.getTime(time);
+                var p = timer.getPassed(time);
 
                 var charNumber = Math.floor(t/charStep);
 
@@ -48,6 +49,12 @@ define(function(require){
                     }
                     pos += charScale;
                     renderedChar = charNumber;
+                }
+
+                if(fadeOut){
+                    _.each(chars, function(obj){
+                        obj.material.opacity = Math.max(0, obj.material.opacity - p);
+                    });
                 }
 
                 _.each(chars, function(obj){
@@ -63,6 +70,9 @@ define(function(require){
             },
             setCharScale: function(scale){
                 charScale = scale;
+            },
+            fadeOut: function(){
+                fadeOut = true;
             }
         }
     }

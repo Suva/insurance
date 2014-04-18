@@ -1,4 +1,5 @@
 define(function(require) {
+    var Text = require("component/Text");
     var Timer = require("Timer");
     var Ease = require("ease");
     var scene = new THREE.Object3D();
@@ -28,15 +29,17 @@ define(function(require) {
             transparent: true
         })
     );
-    screen2.position.z = 0.001;
+    // screen2.position.z = 0.001;
     scene.add(screen2);
 
     scene.add(screen);
 
+    var text = Text.drawString("on a nearby planet", scene, new THREE.Vector3(-6.5, 3, 0.1));
+
     camera.position.set(0, 0, 5.8);
     camera.lookAt(screen.position);
 
-    timer = new Timer();
+    var timer = new Timer();
     return {
         scene: scene,
         camera: camera,
@@ -45,10 +48,15 @@ define(function(require) {
             effectPass.uniforms.aberration.value = 0.003 * aberration;
             aberration = Math.max(0, aberration - 0.01);
 
+            text.render(time);
 
             var localTime = timer.getTime(time);
             if(localTime > 15 && localTime < 40){
                 screen2.material.opacity = Ease.inCubic(1 - ((localTime - 15) / 25));
+            }
+
+            if(localTime > 4){
+                text.fadeOut();
             }
 
             if(localTime > 10){
@@ -65,6 +73,7 @@ define(function(require) {
                 screen2.visible = true;
                 flash = 1;
                 aberration = 1;
+                text.destroy();
             }
         },
         init: function(){

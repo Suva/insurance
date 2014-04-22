@@ -68,6 +68,13 @@ define(function(require){
         var width = window.innerWidth;
         var height = width * (9 / 16);
         var position = (window.innerHeight - height) / 2;
+        var scene = TimeLine ? TimeLine.getScene() : null;
+        if(scene && scene.sceneObject){
+            scene.sceneObject.camera.updateProjectionMatrix();
+        }
+
+        composer = InitializeComposer();
+
         renderer.setSize(width, height);
         $("canvas").css("margin-top", position + "px");
     }

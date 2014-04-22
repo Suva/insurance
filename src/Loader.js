@@ -31,6 +31,7 @@ define(function(require){
             loader.center();
             loader.fadeIn(1000);
         });
+        $(window).resize(function(){ loader.center() });
         return loader;
     }
-})
+});

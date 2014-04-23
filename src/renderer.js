@@ -73,7 +73,7 @@ define(function(require){
             scene.sceneObject.camera.updateProjectionMatrix();
         }
 
-        composer = InitializeComposer();
+        composer.setSize(width, height);
 
         renderer.setSize(width, height);
         $("canvas").css("margin-top", position + "px");

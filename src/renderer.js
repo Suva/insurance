@@ -7,9 +7,11 @@ define(function(require){
     var renderModel = new THREE.RenderPass();
 
     var composer = InitializeComposer();
+    var frameUrl = null;
 
     var scene;
     var timeSource;
+    var framenum = 0;
 
     return {
         init:function(){
@@ -44,15 +46,28 @@ define(function(require){
                 dispatchEvents(events, scene);
                 scene.render(timeSource.getTime());
 
-                requestAnimationFrame(render);
+                if(!frameUrl)
+                    requestAnimationFrame(render);
 
                 renderModel.scene = renderScene;
                 renderModel.camera = scene.camera;
 
                 effectPass.uniforms.globalBrightness.value = Math.random() * 0.05 + 0.95;
                 composer.render();
+
+                if(frameUrl){
+                    var dataUrl = $("canvas")[0].toDataURL("image/jpeg", 0.8);
+                    framenum++;
+                    $.post(frameUrl, { url: dataUrl, frameNumber: framenum}, function(){
+                        render()
+                    });
+                }
+
             }
             render();
+        },
+        saveFramesTo: function(url){
+            frameUrl = url;
         },
         renderer: renderer
     };

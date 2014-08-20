@@ -178,7 +178,7 @@ define(function(require){
 
             if(!respawnLines){
                 _.each(fleet.children, function(ship){
-                    ship.position.add(ship.direction);
+                    ship.position.add(ship.direction.clone().multiplyScalar(timePassed * 60));
                 })
 
                 camera.lookAt(leadShip.position);
